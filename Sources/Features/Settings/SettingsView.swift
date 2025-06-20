@@ -20,7 +20,7 @@ struct SettingsView: View {
             } header: {
                 Text("Dark Mode Settings")
             } footer: {
-                if viewModel.automaticSwitchingEnabled {
+                if !viewModel.automaticSwitchingEnabled {
                     Text("Enable automatic dark/light mode switching at custom times")
                 }
             }
