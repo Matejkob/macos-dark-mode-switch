@@ -1,102 +1,43 @@
 import SwiftUI
 
-// MARK: - Settings View
 struct SettingsView: View {
-    @State private var automaticSwitchingEnabled = true
-    @State private var darkModeTime = Date()
-    @State private var lightModeTime = Date()
+    @State private var viewModel = SettingsViewModel()
     
-    // MARK: - Body
     var body: some View {
-        VStack(spacing: 20) {
-            // Header
-            VStack(spacing: 8) {
-                Image(systemName: "gearshape.2.fill")
-                    .font(.largeTitle)
-                    .foregroundColor(.blue)
+        Form {
+            Section {
+                Toggle("Automatic Switching", isOn: $viewModel.automaticSwitchingEnabled)
                 
-                Text("Dark Mode Settings")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-            }
-            .padding(.top)
-            
-            Divider()
-            
-            // Automatic switching toggle
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Image(systemName: "clock.arrow.2.circlepath")
-                        .foregroundColor(.green)
+                if viewModel.automaticSwitchingEnabled {
+                    DatePicker("Switch to Dark Mode", 
+                              selection: $viewModel.darkModeTime, 
+                              displayedComponents: .hourAndMinute)
                     
-                    Text("Automatic Switching")
-                        .font(.headline)
+                    DatePicker("Switch to Light Mode", 
+                              selection: $viewModel.lightModeTime, 
+                              displayedComponents: .hourAndMinute)
+                }
+            } header: {
+                Text("Dark Mode Settings")
+            } footer: {
+                if viewModel.automaticSwitchingEnabled {
+                    Text("Enable automatic dark/light mode switching at custom times")
+                }
+            }
+            
+            Section {
+                HStack {
+                    Button("Cancel", action: viewModel.cancel)
+                        .buttonStyle(.bordered)
                     
                     Spacer()
                     
-                    Toggle("", isOn: $automaticSwitchingEnabled)
+                    Button("Save", action: viewModel.save)
+                        .buttonStyle(.borderedProminent)
                 }
-                
-                if automaticSwitchingEnabled {
-                    Text("Enable automatic dark/light mode switching at custom times")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .padding(.leading, 24)
-                }
-            }
-            
-            if automaticSwitchingEnabled {
-                Divider()
-                
-                // Time settings
-                VStack(spacing: 16) {
-                    // Dark mode time
-                    HStack {
-                        Image(systemName: "moon.fill")
-                            .foregroundColor(.purple)
-                            .frame(width: 20)
-                        
-                        Text("Switch to Dark Mode:")
-                            .font(.subheadline)
-                        
-                        Spacer()
-                        
-                        DatePicker("", selection: $darkModeTime, displayedComponents: .hourAndMinute)
-                            .labelsHidden()
-                    }
-                    
-                    // Light mode time
-                    HStack {
-                        Image(systemName: "sun.max.fill")
-                            .foregroundColor(.orange)
-                            .frame(width: 20)
-                        
-                        Text("Switch to Light Mode:")
-                            .font(.subheadline)
-                        
-                        Spacer()
-                        
-                        DatePicker("", selection: $lightModeTime, displayedComponents: .hourAndMinute)
-                            .labelsHidden()
-                    }
-                }
-                .padding(.horizontal, 8)
-            }
-            
-            Spacer()
-            
-            Divider()
-            
-            // Action buttons
-            HStack(spacing: 12) {
-                Button("Cancel") {}
-                    .buttonStyle(.bordered)
-                
-                Button("Save") {}
-                    .buttonStyle(.borderedProminent)
             }
         }
-        .padding(24)
-        .frame(width: 400, height: automaticSwitchingEnabled ? 400 : 300)
+        .formStyle(.grouped)
+        .frame(maxWidth: 350, minHeight: 100)
     }
 }
