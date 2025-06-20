@@ -1,7 +1,8 @@
 import Testing
-@testable import DarkModeSwitch
+@testable import App
 
 @Suite("Dark Mode View Model Tests")
+@MainActor
 struct DarkModeViewModelTests {
     private var sut: DarkModeViewModel = DarkModeViewModel(darkModeService: DarkModeService())
     private var mockService: MockDarkModeService = MockDarkModeService()

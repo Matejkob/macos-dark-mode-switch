@@ -1,5 +1,5 @@
 import Testing
-@testable import DarkModeSwitch
+@testable import App
 
 @Suite("Scheduling Service Tests")
 struct SchedulingServiceTests {
