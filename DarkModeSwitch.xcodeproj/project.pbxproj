@@ -7,26 +7,18 @@
 	objects = {
 
 /* Begin PBXContainerItemProxy section */
-		4578DE922E05783A00C35580 /* PBXContainerItemProxy */ = {
+		4578DF312E0584C200C35580 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4578DE7B2E05783800C35580 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 4578DE822E05783800C35580;
-			remoteInfo = DarkModeSwitch;
-		};
-		4578DE9C2E05783A00C35580 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4578DE7B2E05783800C35580 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4578DE822E05783800C35580;
-			remoteInfo = DarkModeSwitch;
+			remoteInfo = App;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		4578DE832E05783800C35580 /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4578DE912E05783A00C35580 /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4578DE9B2E05783A00C35580 /* UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4578DF2D2E0584C200C35580 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -35,14 +27,9 @@
 			path = Sources;
 			sourceTree = "<group>";
 		};
-		4578DE942E05783A00C35580 /* UnitTests */ = {
+		4578DF2E2E0584C200C35580 /* Tests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = UnitTests;
-			sourceTree = "<group>";
-		};
-		4578DE9E2E05783A00C35580 /* UITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = UITests;
+			path = Tests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -55,14 +42,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4578DE8E2E05783A00C35580 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4578DE982E05783A00C35580 /* Frameworks */ = {
+		4578DF2A2E0584C200C35580 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -76,8 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				4578DE852E05783800C35580 /* Sources */,
-				4578DE942E05783A00C35580 /* UnitTests */,
-				4578DE9E2E05783A00C35580 /* UITests */,
+				4578DF2E2E0584C200C35580 /* Tests */,
 				4578DE842E05783800C35580 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -86,8 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				4578DE832E05783800C35580 /* App.app */,
-				4578DE912E05783A00C35580 /* UnitTests.xctest */,
-				4578DE9B2E05783A00C35580 /* UITests.xctest */,
+				4578DF2D2E0584C200C35580 /* Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -117,51 +95,28 @@
 			productReference = 4578DE832E05783800C35580 /* App.app */;
 			productType = "com.apple.product-type.application";
 		};
-		4578DE902E05783A00C35580 /* UnitTests */ = {
+		4578DF2C2E0584C200C35580 /* Tests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4578DEA82E05783A00C35580 /* Build configuration list for PBXNativeTarget "UnitTests" */;
+			buildConfigurationList = 4578DF332E0584C200C35580 /* Build configuration list for PBXNativeTarget "Tests" */;
 			buildPhases = (
-				4578DE8D2E05783A00C35580 /* Sources */,
-				4578DE8E2E05783A00C35580 /* Frameworks */,
-				4578DE8F2E05783A00C35580 /* Resources */,
+				4578DF292E0584C200C35580 /* Sources */,
+				4578DF2A2E0584C200C35580 /* Frameworks */,
+				4578DF2B2E0584C200C35580 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				4578DE932E05783A00C35580 /* PBXTargetDependency */,
+				4578DF322E0584C200C35580 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				4578DE942E05783A00C35580 /* UnitTests */,
+				4578DF2E2E0584C200C35580 /* Tests */,
 			);
-			name = UnitTests;
+			name = Tests;
 			packageProductDependencies = (
 			);
-			productName = DarkModeSwitchTests;
-			productReference = 4578DE912E05783A00C35580 /* UnitTests.xctest */;
+			productName = Tests;
+			productReference = 4578DF2D2E0584C200C35580 /* Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		4578DE9A2E05783A00C35580 /* UITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 4578DEAB2E05783A00C35580 /* Build configuration list for PBXNativeTarget "UITests" */;
-			buildPhases = (
-				4578DE972E05783A00C35580 /* Sources */,
-				4578DE982E05783A00C35580 /* Frameworks */,
-				4578DE992E05783A00C35580 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				4578DE9D2E05783A00C35580 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				4578DE9E2E05783A00C35580 /* UITests */,
-			);
-			name = UITests;
-			packageProductDependencies = (
-			);
-			productName = DarkModeSwitchUITests;
-			productReference = 4578DE9B2E05783A00C35580 /* UITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -176,11 +131,7 @@
 					4578DE822E05783800C35580 = {
 						CreatedOnToolsVersion = 16.4;
 					};
-					4578DE902E05783A00C35580 = {
-						CreatedOnToolsVersion = 16.4;
-						TestTargetID = 4578DE822E05783800C35580;
-					};
-					4578DE9A2E05783A00C35580 = {
+					4578DF2C2E0584C200C35580 = {
 						CreatedOnToolsVersion = 16.4;
 						TestTargetID = 4578DE822E05783800C35580;
 					};
@@ -201,8 +152,7 @@
 			projectRoot = "";
 			targets = (
 				4578DE822E05783800C35580 /* App */,
-				4578DE902E05783A00C35580 /* UnitTests */,
-				4578DE9A2E05783A00C35580 /* UITests */,
+				4578DF2C2E0584C200C35580 /* Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -215,14 +165,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4578DE8F2E05783A00C35580 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4578DE992E05783A00C35580 /* Resources */ = {
+		4578DF2B2E0584C200C35580 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -239,14 +182,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4578DE8D2E05783A00C35580 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4578DE972E05783A00C35580 /* Sources */ = {
+		4578DF292E0584C200C35580 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -256,15 +192,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4578DE932E05783A00C35580 /* PBXTargetDependency */ = {
+		4578DF322E0584C200C35580 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4578DE822E05783800C35580 /* App */;
-			targetProxy = 4578DE922E05783A00C35580 /* PBXContainerItemProxy */;
-		};
-		4578DE9D2E05783A00C35580 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4578DE822E05783800C35580 /* App */;
-			targetProxy = 4578DE9C2E05783A00C35580 /* PBXContainerItemProxy */;
+			targetProxy = 4578DF312E0584C200C35580 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -443,7 +374,7 @@
 			};
 			name = Release;
 		};
-		4578DEA92E05783A00C35580 /* Debug */ = {
+		4578DF342E0584C200C35580 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -451,17 +382,16 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9RSVCT9A9H;
 				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mateuszbak.DarkModeSwitchTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mateuszbak.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DarkModeSwitch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DarkModeSwitch";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/App";
 			};
 			name = Debug;
 		};
-		4578DEAA2E05783A00C35580 /* Release */ = {
+		4578DF352E0584C200C35580 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -469,45 +399,12 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 9RSVCT9A9H;
 				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 15.5;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mateuszbak.DarkModeSwitchTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mateuszbak.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DarkModeSwitch.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/DarkModeSwitch";
-			};
-			name = Release;
-		};
-		4578DEAC2E05783A00C35580 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9RSVCT9A9H;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mateuszbak.DarkModeSwitchUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = DarkModeSwitch;
-			};
-			name = Debug;
-		};
-		4578DEAD2E05783A00C35580 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9RSVCT9A9H;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mateuszbak.DarkModeSwitchUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = DarkModeSwitch;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/App";
 			};
 			name = Release;
 		};
@@ -532,20 +429,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4578DEA82E05783A00C35580 /* Build configuration list for PBXNativeTarget "UnitTests" */ = {
+		4578DF332E0584C200C35580 /* Build configuration list for PBXNativeTarget "Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4578DEA92E05783A00C35580 /* Debug */,
-				4578DEAA2E05783A00C35580 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		4578DEAB2E05783A00C35580 /* Build configuration list for PBXNativeTarget "UITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4578DEAC2E05783A00C35580 /* Debug */,
-				4578DEAD2E05783A00C35580 /* Release */,
+				4578DF342E0584C200C35580 /* Debug */,
+				4578DF352E0584C200C35580 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
