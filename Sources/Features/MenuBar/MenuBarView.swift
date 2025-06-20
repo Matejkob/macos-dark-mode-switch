@@ -1,16 +1,13 @@
 import SwiftUI
 
-// MARK: - Menu Bar View
 struct MenuBarView: View {
     @State private var viewModel: MenuBarViewModel
     
-    // MARK: - Initialization
-    init(viewModel: MenuBarViewModel) {
+        init(viewModel: MenuBarViewModel) {
         self._viewModel = State(initialValue: viewModel)
     }
     
-    // MARK: - Body
-    var body: some View {
+        var body: some View {
         // Current mode status
         Text(viewModel.isDarkMode ? "Dark Mode Active" : "Light Mode Active")
         

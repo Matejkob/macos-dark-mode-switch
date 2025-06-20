@@ -2,11 +2,9 @@ import Foundation
 import AppKit
 import Cocoa
 
-// MARK: - Dark Mode Service
 struct DarkModeService: DarkModeServiceProtocol {
     
-    // MARK: - Public Methods
-    
+        
     func getCurrentMode() -> AppearanceMode {
         // Use AppleScript as primary method since it's more reliable for system-wide detection
         let script = """
@@ -60,8 +58,7 @@ struct DarkModeService: DarkModeServiceProtocol {
         setMode(newMode)
     }
     
-    // MARK: - Private Methods
-    
+        
     private func setSystemAppearance(dark: Bool) {
         let script = """
         tell application "System Events"

@@ -1,6 +1,5 @@
 import Foundation
 
-// MARK: - Settings Models
 
 struct SettingsData {
     // TODO: Define settings data properties

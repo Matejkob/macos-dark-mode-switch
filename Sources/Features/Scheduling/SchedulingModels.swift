@@ -1,6 +1,5 @@
 import Foundation
 
-// MARK: - Scheduling Models
 
 struct ScheduleTime {
     // TODO: Define schedule time properties

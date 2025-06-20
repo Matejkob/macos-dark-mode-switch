@@ -1,23 +1,18 @@
 import Foundation
 import SwiftUI
 
-// MARK: - Menu Bar View Model
 @MainActor
 @Observable
 final class MenuBarViewModel {
     
-    // MARK: - Published Properties
+        
+        private let darkModeViewModel: DarkModeViewModel
     
-    // MARK: - Private Properties
-    private let darkModeViewModel: DarkModeViewModel
-    
-    // MARK: - Initialization
-    init(darkModeViewModel: DarkModeViewModel) {
+        init(darkModeViewModel: DarkModeViewModel) {
         self.darkModeViewModel = darkModeViewModel
     }
     
-    // MARK: - Public Methods
-    
+        
     func toggleMode() {
         darkModeViewModel.toggleMode()
     }

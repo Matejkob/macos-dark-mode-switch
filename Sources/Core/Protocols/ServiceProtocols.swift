@@ -1,6 +1,5 @@
 import Foundation
 
-// MARK: - Service Protocols
 
 protocol DarkModeServiceProtocol {
     func getCurrentMode() -> AppearanceMode

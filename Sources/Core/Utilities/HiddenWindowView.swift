@@ -86,7 +86,6 @@ import SwiftUI
     }
 }
 
-// MARK: - Hidden Window View
 
 /// A minimal hidden window that enables Settings to work in MenuBarExtra apps.
 /// This is a workaround for FB10184971.
@@ -105,7 +104,6 @@ struct HiddenWindowView: View {
     }
 }
 
-// MARK: - Notification Extensions
 
 extension Notification.Name {
     static fileprivate let openSettingsRequest = Notification.Name("openSettingsRequest")
