@@ -3,7 +3,9 @@ import Foundation
 // MARK: - Service Protocols
 
 protocol DarkModeServiceProtocol {
-    // TODO: Define dark mode service interface
+    func getCurrentMode() -> AppearanceMode
+    func setMode(_ mode: AppearanceMode)
+    func toggleMode()
 }
 
 protocol SchedulingServiceProtocol {

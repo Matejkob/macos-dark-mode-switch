@@ -2,17 +2,24 @@ import SwiftUI
 
 // MARK: - Menu Bar View
 struct MenuBarView: View {
-    @State private var isDarkMode = false
+    @State private var viewModel: MenuBarViewModel
+    
+    // MARK: - Initialization
+    init(viewModel: MenuBarViewModel) {
+        self._viewModel = State(initialValue: viewModel)
+    }
     
     // MARK: - Body
     var body: some View {
         // Current mode status
-        Text(isDarkMode ? "Dark Mode Active" : "Light Mode Active")
+        Text(viewModel.isDarkMode ? "Dark Mode Active" : "Light Mode Active")
         
         Divider()
         
         // Toggle button
-        Button(action: {}) {
+        Button(action: {
+            viewModel.toggleMode()
+        }) {
             Label("Toggle Mode", systemImage: "switch.2")
         }
         

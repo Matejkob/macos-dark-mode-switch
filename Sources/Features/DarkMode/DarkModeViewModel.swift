@@ -7,6 +7,7 @@ import SwiftUI
 final class DarkModeViewModel {
     
     // MARK: - Published Properties
+    var currentMode: AppearanceMode = .light
     
     // MARK: - Private Properties
     private let darkModeService: DarkModeServiceProtocol
@@ -14,10 +15,22 @@ final class DarkModeViewModel {
     // MARK: - Initialization
     init(darkModeService: DarkModeServiceProtocol) {
         self.darkModeService = darkModeService
-        // TODO: Setup initial state
+        refreshCurrentMode()
     }
     
     // MARK: - Public Methods
     
-    // TODO: Implement view model methods
+    func toggleMode() {
+        darkModeService.toggleMode()
+        refreshCurrentMode()
+    }
+    
+    func setMode(_ mode: AppearanceMode) {
+        darkModeService.setMode(mode)
+        refreshCurrentMode()
+    }
+    
+    func refreshCurrentMode() {
+        currentMode = darkModeService.getCurrentMode()
+    }
 }

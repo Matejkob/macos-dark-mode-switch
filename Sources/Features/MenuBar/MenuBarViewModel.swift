@@ -9,13 +9,24 @@ final class MenuBarViewModel {
     // MARK: - Published Properties
     
     // MARK: - Private Properties
+    private let darkModeViewModel: DarkModeViewModel
     
     // MARK: - Initialization
-    init() {
-        // TODO: Setup initial state
+    init(darkModeViewModel: DarkModeViewModel) {
+        self.darkModeViewModel = darkModeViewModel
     }
     
     // MARK: - Public Methods
     
-    // TODO: Implement view model methods
+    func toggleMode() {
+        darkModeViewModel.toggleMode()
+    }
+    
+    var currentMode: AppearanceMode {
+        darkModeViewModel.currentMode
+    }
+    
+    var isDarkMode: Bool {
+        currentMode == .dark
+    }
 }
