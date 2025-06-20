@@ -46,3 +46,5 @@ macOS offers automatic dark/light mode switching, but users cannot set custom ti
 - **One Type per File**: Prefer having one type (class, struct, enum, protocol, etc.) per file. Only include additional types in the same file if there is a very strong, explicit reason (such as a tightly coupled helper or private nested type).
 - **Async Functions**: Do not mark functions or methods as `async` unless it is necessary for concurrency or to await asynchronous work. Prefer synchronous functions when possible for clarity and simplicity.
 - **Value Types Preferred**: Prefer value types (`struct`) over reference types (`class`) unless reference semantics are required. Use `class` only when identity, inheritance, or reference sharing is necessary.
+- Use Swift Testing framework for unit tests.
+- Use `@Observable` macro for ViewModels. 
