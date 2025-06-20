@@ -24,25 +24,25 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4578DE832E05783800C35580 /* DarkModeSwitch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DarkModeSwitch.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4578DE912E05783A00C35580 /* DarkModeSwitchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DarkModeSwitchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4578DE9B2E05783A00C35580 /* DarkModeSwitchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DarkModeSwitchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4578DE832E05783800C35580 /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4578DE912E05783A00C35580 /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		4578DE9B2E05783A00C35580 /* UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		4578DE852E05783800C35580 /* DarkModeSwitch */ = {
+		4578DE852E05783800C35580 /* Sources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = DarkModeSwitch;
+			path = Sources;
 			sourceTree = "<group>";
 		};
-		4578DE942E05783A00C35580 /* DarkModeSwitchTests */ = {
+		4578DE942E05783A00C35580 /* UnitTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = DarkModeSwitchTests;
+			path = UnitTests;
 			sourceTree = "<group>";
 		};
-		4578DE9E2E05783A00C35580 /* DarkModeSwitchUITests */ = {
+		4578DE9E2E05783A00C35580 /* UITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = DarkModeSwitchUITests;
+			path = UITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -75,9 +75,9 @@
 		4578DE7A2E05783800C35580 = {
 			isa = PBXGroup;
 			children = (
-				4578DE852E05783800C35580 /* DarkModeSwitch */,
-				4578DE942E05783A00C35580 /* DarkModeSwitchTests */,
-				4578DE9E2E05783A00C35580 /* DarkModeSwitchUITests */,
+				4578DE852E05783800C35580 /* Sources */,
+				4578DE942E05783A00C35580 /* UnitTests */,
+				4578DE9E2E05783A00C35580 /* UITests */,
 				4578DE842E05783800C35580 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -85,9 +85,9 @@
 		4578DE842E05783800C35580 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4578DE832E05783800C35580 /* DarkModeSwitch.app */,
-				4578DE912E05783A00C35580 /* DarkModeSwitchTests.xctest */,
-				4578DE9B2E05783A00C35580 /* DarkModeSwitchUITests.xctest */,
+				4578DE832E05783800C35580 /* App.app */,
+				4578DE912E05783A00C35580 /* UnitTests.xctest */,
+				4578DE9B2E05783A00C35580 /* UITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4578DE822E05783800C35580 /* DarkModeSwitch */ = {
+		4578DE822E05783800C35580 /* App */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4578DEA52E05783A00C35580 /* Build configuration list for PBXNativeTarget "DarkModeSwitch" */;
+			buildConfigurationList = 4578DEA52E05783A00C35580 /* Build configuration list for PBXNativeTarget "App" */;
 			buildPhases = (
 				4578DE7F2E05783800C35580 /* Sources */,
 				4578DE802E05783800C35580 /* Frameworks */,
@@ -108,18 +108,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				4578DE852E05783800C35580 /* DarkModeSwitch */,
+				4578DE852E05783800C35580 /* Sources */,
 			);
-			name = DarkModeSwitch;
+			name = App;
 			packageProductDependencies = (
 			);
 			productName = DarkModeSwitch;
-			productReference = 4578DE832E05783800C35580 /* DarkModeSwitch.app */;
+			productReference = 4578DE832E05783800C35580 /* App.app */;
 			productType = "com.apple.product-type.application";
 		};
-		4578DE902E05783A00C35580 /* DarkModeSwitchTests */ = {
+		4578DE902E05783A00C35580 /* UnitTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4578DEA82E05783A00C35580 /* Build configuration list for PBXNativeTarget "DarkModeSwitchTests" */;
+			buildConfigurationList = 4578DEA82E05783A00C35580 /* Build configuration list for PBXNativeTarget "UnitTests" */;
 			buildPhases = (
 				4578DE8D2E05783A00C35580 /* Sources */,
 				4578DE8E2E05783A00C35580 /* Frameworks */,
@@ -131,18 +131,18 @@
 				4578DE932E05783A00C35580 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				4578DE942E05783A00C35580 /* DarkModeSwitchTests */,
+				4578DE942E05783A00C35580 /* UnitTests */,
 			);
-			name = DarkModeSwitchTests;
+			name = UnitTests;
 			packageProductDependencies = (
 			);
 			productName = DarkModeSwitchTests;
-			productReference = 4578DE912E05783A00C35580 /* DarkModeSwitchTests.xctest */;
+			productReference = 4578DE912E05783A00C35580 /* UnitTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		4578DE9A2E05783A00C35580 /* DarkModeSwitchUITests */ = {
+		4578DE9A2E05783A00C35580 /* UITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4578DEAB2E05783A00C35580 /* Build configuration list for PBXNativeTarget "DarkModeSwitchUITests" */;
+			buildConfigurationList = 4578DEAB2E05783A00C35580 /* Build configuration list for PBXNativeTarget "UITests" */;
 			buildPhases = (
 				4578DE972E05783A00C35580 /* Sources */,
 				4578DE982E05783A00C35580 /* Frameworks */,
@@ -154,13 +154,13 @@
 				4578DE9D2E05783A00C35580 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				4578DE9E2E05783A00C35580 /* DarkModeSwitchUITests */,
+				4578DE9E2E05783A00C35580 /* UITests */,
 			);
-			name = DarkModeSwitchUITests;
+			name = UITests;
 			packageProductDependencies = (
 			);
 			productName = DarkModeSwitchUITests;
-			productReference = 4578DE9B2E05783A00C35580 /* DarkModeSwitchUITests.xctest */;
+			productReference = 4578DE9B2E05783A00C35580 /* UITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -200,9 +200,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4578DE822E05783800C35580 /* DarkModeSwitch */,
-				4578DE902E05783A00C35580 /* DarkModeSwitchTests */,
-				4578DE9A2E05783A00C35580 /* DarkModeSwitchUITests */,
+				4578DE822E05783800C35580 /* App */,
+				4578DE902E05783A00C35580 /* UnitTests */,
+				4578DE9A2E05783A00C35580 /* UITests */,
 			);
 		};
 /* End PBXProject section */
@@ -258,12 +258,12 @@
 /* Begin PBXTargetDependency section */
 		4578DE932E05783A00C35580 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4578DE822E05783800C35580 /* DarkModeSwitch */;
+			target = 4578DE822E05783800C35580 /* App */;
 			targetProxy = 4578DE922E05783A00C35580 /* PBXContainerItemProxy */;
 		};
 		4578DE9D2E05783A00C35580 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 4578DE822E05783800C35580 /* DarkModeSwitch */;
+			target = 4578DE822E05783800C35580 /* App */;
 			targetProxy = 4578DE9C2E05783A00C35580 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -394,7 +394,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = DarkModeSwitch/DarkModeSwitch.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Sources/DarkModeSwitch.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -421,7 +421,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = DarkModeSwitch/DarkModeSwitch.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Sources/DarkModeSwitch.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -523,7 +523,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4578DEA52E05783A00C35580 /* Build configuration list for PBXNativeTarget "DarkModeSwitch" */ = {
+		4578DEA52E05783A00C35580 /* Build configuration list for PBXNativeTarget "App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4578DEA62E05783A00C35580 /* Debug */,
@@ -532,7 +532,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4578DEA82E05783A00C35580 /* Build configuration list for PBXNativeTarget "DarkModeSwitchTests" */ = {
+		4578DEA82E05783A00C35580 /* Build configuration list for PBXNativeTarget "UnitTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4578DEA92E05783A00C35580 /* Debug */,
@@ -541,7 +541,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4578DEAB2E05783A00C35580 /* Build configuration list for PBXNativeTarget "DarkModeSwitchUITests" */ = {
+		4578DEAB2E05783A00C35580 /* Build configuration list for PBXNativeTarget "UITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4578DEAC2E05783A00C35580 /* Debug */,
