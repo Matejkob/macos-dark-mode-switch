@@ -2,12 +2,32 @@ import SwiftUI
 
 // MARK: - Menu Bar View
 struct MenuBarView: View {
+    @State private var isDarkMode = false
+    
     // MARK: - Body
     var body: some View {
-        VStack {
-            // TODO: Implement menu bar content
-            Text("Menu Bar Content")
+        // Current mode status
+        Text(isDarkMode ? "Dark Mode Active" : "Light Mode Active")
+        
+        Divider()
+        
+        // Toggle button
+        Button(action: {}) {
+            Label("Toggle Mode", systemImage: "switch.2")
         }
-        .padding()
+        
+        // Settings button
+        Button(action: {
+            NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+        }) {
+            Label("Settings", systemImage: "gearshape")
+        }
+        
+        Divider()
+        
+        // Quit button
+        Button("Quit") {
+            NSApplication.shared.terminate(nil)
+        }
     }
 }
