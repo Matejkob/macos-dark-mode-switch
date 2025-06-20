@@ -25,10 +25,11 @@ struct MenuBarView: View {
         
         // Settings button
         Button(action: {
-            NSApp.sendAction(Selector(("showPreferencesWindow:")), to: nil, from: nil)
+            SettingsOpener.openSettings()
         }) {
             Label("Settings", systemImage: "gearshape")
         }
+        .keyboardShortcut(",", modifiers: .command)
         
         Divider()
         
