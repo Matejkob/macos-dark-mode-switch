@@ -1,9 +1,13 @@
 import Foundation
 
 struct SchedulingService: SchedulingServiceProtocol {
-    
     private let launchAgentInfo = LaunchAgentInfo.shared
     private let fileManager = FileManager.default
+    private var preferencesRepository: any PreferencesRepository
+    
+    init(preferencesRepository: any PreferencesRepository = UserDefaultsPreferencesRepository()) {
+        self.preferencesRepository = preferencesRepository
+    }
     
     private var launchAgentsDirectory: URL {
         fileManager.homeDirectoryForCurrentUser
@@ -18,41 +22,29 @@ struct SchedulingService: SchedulingServiceProtocol {
         // Create script path if needed
         let scriptPath = try getOrCreateScriptPath()
         
-        // Create and register dark mode launch agent
-        try createAndRegisterLaunchAgent(
-            label: launchAgentInfo.darkModeAgentLabel,
-            scriptPath: scriptPath,
-            mode: "dark",
-            time: ScheduleTime(from: darkModeTime)
-        )
+        // Save schedule preferences for the script to read
+        try saveSchedulePreferences(darkModeTime: darkModeTime, lightModeTime: lightModeTime, enabled: true)
         
-        // Create and register light mode launch agent
-        try createAndRegisterLaunchAgent(
-            label: launchAgentInfo.lightModeAgentLabel,
-            scriptPath: scriptPath,
-            mode: "light",
-            time: ScheduleTime(from: lightModeTime)
-        )
+        // Create and register single launch agent that runs every 5 minutes
+        try createAndRegisterSchedulerAgent(scriptPath: scriptPath)
     }
     
     func disableAutomaticScheduling() throws {
-        // Unregister and remove both launch agents
-        try unregisterAndRemoveLaunchAgent(label: launchAgentInfo.darkModeAgentLabel)
-        try unregisterAndRemoveLaunchAgent(label: launchAgentInfo.lightModeAgentLabel)
+        // Disable scheduling in preferences
+        try saveSchedulePreferences(darkModeTime: Date(), lightModeTime: Date(), enabled: false)
+        
+        // Unregister and remove launch agent
+        try unregisterAndRemoveLaunchAgent(label: launchAgentInfo.agentLabel)
     }
     
     func updateSchedule(darkModeTime: Date, lightModeTime: Date) throws {
-        // Disable existing schedule and enable with new times
-        try disableAutomaticScheduling()
-        try enableAutomaticScheduling(darkModeTime: darkModeTime, lightModeTime: lightModeTime)
+        // Simply update the preferences - the agent will pick up the changes
+        try saveSchedulePreferences(darkModeTime: darkModeTime, lightModeTime: lightModeTime, enabled: true)
     }
     
     func isSchedulingEnabled() -> Bool {
-        let darkModeAgentPath = launchAgentsDirectory.appendingPathComponent("\(launchAgentInfo.darkModeAgentLabel).plist")
-        let lightModeAgentPath = launchAgentsDirectory.appendingPathComponent("\(launchAgentInfo.lightModeAgentLabel).plist")
-        
-        return fileManager.fileExists(atPath: darkModeAgentPath.path) &&
-               fileManager.fileExists(atPath: lightModeAgentPath.path)
+        let agentPath = launchAgentsDirectory.appendingPathComponent("\(launchAgentInfo.agentLabel).plist")
+        return fileManager.fileExists(atPath: agentPath.path)
     }
     
     // MARK: - Private Methods
@@ -93,52 +85,147 @@ struct SchedulingService: SchedulingServiceProtocol {
     }
     
     private func createScriptFile(at url: URL) throws {
-        let scriptContent = """
+        let scriptContent = ###"""
         #!/bin/bash
-        
-        # DarkModeSwitch - Appearance Mode Setter Script
-        # This script is called by Launch Agents to set system appearance mode
-        # Usage: ./set-appearance-mode.sh [dark|light]
-        
-        if [ $# -eq 0 ]; then
-            echo "Usage: $0 [dark|light]"
-            exit 1
-        fi
-        
-        MODE="$1"
-        
-        case "$MODE" in
-            "dark")
-                DARK_MODE_VALUE="true"
-                ;;
-            "light")
-                DARK_MODE_VALUE="false"
-                ;;
-            *)
-                echo "Error: Invalid mode '$MODE'. Use 'dark' or 'light'"
+
+        # DarkModeSwitch - Smart Appearance Mode Manager Script
+        # This script is called periodically by a Launch Agent to manage system appearance mode
+        # It reads user preferences and switches mode only when needed
+
+        # Function to get current system appearance mode
+        get_current_mode() {
+            osascript -e "tell application \"System Events\" to tell appearance preferences to return dark mode" 2>/dev/null
+        }
+
+        # Function to set system appearance mode
+        set_appearance_mode() {
+            local mode="$1"
+            local dark_mode_value
+            
+            case "$mode" in
+                "dark")
+                    dark_mode_value="true"
+                    ;;
+                "light")
+                    dark_mode_value="false"
+                    ;;
+                *)
+                    echo "Error: Invalid mode '$mode'. Use 'dark' or 'light'"
+                    return 1
+                    ;;
+            esac
+            
+            osascript -e "tell app \"System Events\" to tell appearance preferences to set dark mode to $dark_mode_value" 2>/dev/null
+        }
+
+        # Function to read user preferences from UserDefaults
+        read_user_preferences() {
+            local enabled=$(defaults read com.darkmodeswitch.preferences automaticSwitchingEnabled 2>/dev/null || echo "false")
+            local dark_time=$(defaults read com.darkmodeswitch.preferences darkModeTime 2>/dev/null || echo "")
+            local light_time=$(defaults read com.darkmodeswitch.preferences lightModeTime 2>/dev/null || echo "")
+            
+            echo "$enabled|$dark_time|$light_time"
+        }
+
+        # Function to extract hour and minute from ISO date string
+        extract_time() {
+            local date_string="$1"
+            # Extract time from ISO date format (2024-01-01 21:00:00 +0000)
+            echo "$date_string" | sed -n 's/.*[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\} \([0-9]\{2\}:[0-9]\{2\}\):.*/\1/p'
+        }
+
+        # Function to get current time in HH:MM format
+        get_current_time() {
+            date '+%H:%M'
+        }
+
+        # Function to determine if current time is in dark mode period
+        should_be_dark_mode() {
+            local current_time="$1"
+            local dark_time="$2"
+            local light_time="$3"
+            
+            # Convert times to minutes since midnight for easier comparison
+            local current_minutes=$(echo "$current_time" | awk -F: '{print $1*60 + $2}')
+            local dark_minutes=$(echo "$dark_time" | awk -F: '{print $1*60 + $2}')
+            local light_minutes=$(echo "$light_time" | awk -F: '{print $1*60 + $2}')
+            
+            # Handle case where dark period spans midnight
+            if [ $dark_minutes -gt $light_minutes ]; then
+                # Dark period spans midnight (e.g., 21:00 to 07:00)
+                if [ $current_minutes -ge $dark_minutes ] || [ $current_minutes -lt $light_minutes ]; then
+                    echo "true"
+                else
+                    echo "false"
+                fi
+            else
+                # Dark period within same day (e.g., 07:00 to 21:00) - unusual but possible
+                if [ $current_minutes -ge $dark_minutes ] && [ $current_minutes -lt $light_minutes ]; then
+                    echo "true"
+                else
+                    echo "false"
+                fi
+            fi
+        }
+
+        # Main logic
+        main() {
+            # Read user preferences
+            local prefs=$(read_user_preferences)
+            local enabled=$(echo "$prefs" | cut -d'|' -f1)
+            local dark_time_raw=$(echo "$prefs" | cut -d'|' -f2)
+            local light_time_raw=$(echo "$prefs" | cut -d'|' -f3)
+            
+            # Check if automatic switching is enabled
+            if [ "$enabled" != "1" ] && [ "$enabled" != "true" ]; then
+                echo "Automatic switching is disabled"
+                exit 0
+            fi
+            
+            # Extract time components
+            local dark_time=$(extract_time "$dark_time_raw")
+            local light_time=$(extract_time "$light_time_raw")
+            
+            if [ -z "$dark_time" ] || [ -z "$light_time" ]; then
+                echo "Error: Could not read schedule times from preferences"
                 exit 1
-                ;;
-        esac
-        
-        # Use AppleScript to set system appearance
-        osascript -e "
-        tell application \\"System Events\\"
-            tell appearance preferences
-                set dark mode to $DARK_MODE_VALUE
-            end tell
-        end tell
-        "
-        
-        EXIT_CODE=$?
-        
-        if [ $EXIT_CODE -eq 0 ]; then
-            echo "Successfully set appearance mode to $MODE"
-        else
-            echo "Failed to set appearance mode to $MODE (exit code: $EXIT_CODE)"
-        fi
-        
-        exit $EXIT_CODE
-        """
+            fi
+            
+            # Get current time and system mode
+            local current_time=$(get_current_time)
+            local current_mode=$(get_current_mode)
+            
+            # Determine what mode we should be in
+            local should_be_dark=$(should_be_dark_mode "$current_time" "$dark_time" "$light_time")
+            
+            # Check if we need to switch
+            if [ "$should_be_dark" = "true" ] && [ "$current_mode" != "true" ]; then
+                echo "Switching to dark mode (current: $current_time, schedule: dark at $dark_time)"
+                set_appearance_mode "dark"
+                if [ $? -eq 0 ]; then
+                    echo "Successfully switched to dark mode"
+                else
+                    echo "Failed to switch to dark mode"
+                    exit 1
+                fi
+            elif [ "$should_be_dark" = "false" ] && [ "$current_mode" != "false" ]; then
+                echo "Switching to light mode (current: $current_time, schedule: light at $light_time)"
+                set_appearance_mode "light"
+                if [ $? -eq 0 ]; then
+                    echo "Successfully switched to light mode"
+                else
+                    echo "Failed to switch to light mode"
+                    exit 1
+                fi
+            else
+                echo "No mode change needed (current: $current_time, mode: $([ "$current_mode" = "true" ] && echo "dark" || echo "light"))"
+            fi
+        }
+
+        # Run main function
+        main
+
+        """###
         
         try scriptContent.write(to: url, atomically: true, encoding: .utf8)
         
@@ -147,9 +234,15 @@ struct SchedulingService: SchedulingServiceProtocol {
         try fileManager.setAttributes(attributes, ofItemAtPath: url.path)
     }
     
-    private func createAndRegisterLaunchAgent(label: String, scriptPath: String, mode: String, time: ScheduleTime) throws {
-        let plistContent = createLaunchAgentPlist(label: label, scriptPath: scriptPath, mode: mode, time: time)
-        let plistPath = launchAgentsDirectory.appendingPathComponent("\(label).plist")
+    private func saveSchedulePreferences(darkModeTime: Date, lightModeTime: Date, enabled: Bool) throws {
+        preferencesRepository.automaticSwitchingEnabled = enabled
+        preferencesRepository.darkModeTime = darkModeTime
+        preferencesRepository.lightModeTime = lightModeTime
+    }
+    
+    private func createAndRegisterSchedulerAgent(scriptPath: String) throws {
+        let plistContent = createSchedulerAgentPlist(scriptPath: scriptPath)
+        let plistPath = launchAgentsDirectory.appendingPathComponent("\(launchAgentInfo.agentLabel).plist")
         
         // Write plist file
         try plistContent.write(to: plistPath, atomically: true, encoding: .utf8)
@@ -174,28 +267,26 @@ struct SchedulingService: SchedulingServiceProtocol {
         }
     }
     
-    private func createLaunchAgentPlist(label: String, scriptPath: String, mode: String, time: ScheduleTime) -> String {
+    private func createSchedulerAgentPlist(scriptPath: String) -> String {
         return """
         <?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
         <plist version="1.0">
         <dict>
             <key>Label</key>
-            <string>\(label)</string>
+            <string>\(launchAgentInfo.agentLabel)</string>
             <key>ProgramArguments</key>
             <array>
                 <string>\(scriptPath)</string>
-                <string>\(mode)</string>
             </array>
-            <key>StartCalendarInterval</key>
-            <dict>
-                <key>Hour</key>
-                <integer>\(time.hour)</integer>
-                <key>Minute</key>
-                <integer>\(time.minute)</integer>
-            </dict>
+            <key>StartInterval</key>
+            <integer>300</integer>
             <key>RunAtLoad</key>
             <false/>
+            <key>StandardOutPath</key>
+            <string>/tmp/darkmodeswitch.log</string>
+            <key>StandardErrorPath</key>
+            <string>/tmp/darkmodeswitch.log</string>
         </dict>
         </plist>
         """

@@ -4,16 +4,19 @@ import SwiftUI
 @MainActor
 @Observable
 final class SettingsViewModel {
-    
     var automaticSwitchingEnabled = true
     var darkModeTime = Date()
     var lightModeTime = Date()
     
-    private let schedulingService: SchedulingServiceProtocol
-    private let userDefaults = UserDefaults.standard
+    private let schedulingService: any SchedulingServiceProtocol
+    private var preferencesRepository: any PreferencesRepository
     
-    init(schedulingService: SchedulingServiceProtocol = SchedulingService()) {
+    init(
+        schedulingService: any SchedulingServiceProtocol = SchedulingService(),
+        preferencesRepository: any PreferencesRepository = UserDefaultsPreferencesRepository()
+    ) {
         self.schedulingService = schedulingService
+        self.preferencesRepository = preferencesRepository
         loadSettings()
     }
     
@@ -48,17 +51,17 @@ final class SettingsViewModel {
     }
     
     private func loadSettings() {
-        automaticSwitchingEnabled = userDefaults.bool(forKey: "automaticSwitchingEnabled")
+        automaticSwitchingEnabled = preferencesRepository.automaticSwitchingEnabled
         
         // Load times with defaults
-        if let darkModeTimeData = userDefaults.object(forKey: "darkModeTime") as? Date {
+        if let darkModeTimeData = preferencesRepository.darkModeTime {
             darkModeTime = darkModeTimeData
         } else {
             // Default to 9 PM
             darkModeTime = Calendar.current.date(bySettingHour: 21, minute: 0, second: 0, of: Date()) ?? Date()
         }
         
-        if let lightModeTimeData = userDefaults.object(forKey: "lightModeTime") as? Date {
+        if let lightModeTimeData = preferencesRepository.lightModeTime {
             lightModeTime = lightModeTimeData
         } else {
             // Default to 7 AM
@@ -73,8 +76,8 @@ final class SettingsViewModel {
     }
     
     private func saveSettings() {
-        userDefaults.set(automaticSwitchingEnabled, forKey: "automaticSwitchingEnabled")
-        userDefaults.set(darkModeTime, forKey: "darkModeTime")
-        userDefaults.set(lightModeTime, forKey: "lightModeTime")
+        preferencesRepository.automaticSwitchingEnabled = automaticSwitchingEnabled
+        preferencesRepository.darkModeTime = darkModeTime
+        preferencesRepository.lightModeTime = lightModeTime
     }
 }

@@ -7,13 +7,3 @@ protocol DarkModeServiceProtocol {
     func toggleMode()
 }
 
-protocol SchedulingServiceProtocol {
-    func enableAutomaticScheduling(darkModeTime: Date, lightModeTime: Date) throws
-    func disableAutomaticScheduling() throws
-    func updateSchedule(darkModeTime: Date, lightModeTime: Date) throws
-    func isSchedulingEnabled() -> Bool
-}
-
-protocol PreferencesServiceProtocol {
-    // TODO: Define preferences service interface
-}
