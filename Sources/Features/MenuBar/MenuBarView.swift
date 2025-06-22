@@ -1,38 +1,45 @@
 import SwiftUI
 
 struct MenuBarView: View {
-    @State private var viewModel: MenuBarViewModel
+    private var viewModel: MenuBarViewModel
     
-        init(viewModel: MenuBarViewModel) {
-        self._viewModel = State(initialValue: viewModel)
+    init(viewModel: MenuBarViewModel) {
+        self.viewModel = viewModel
     }
     
-        var body: some View {
-        // Current mode status
-        Text(viewModel.isDarkMode ? "Dark Mode Active" : "Light Mode Active")
-        
-        Divider()
-        
-        // Toggle button
-        Button(action: {
-            viewModel.toggleMode()
-        }) {
-            Label("Toggle Mode", systemImage: "switch.2")
+    var body: some View {
+        VStack {
+            Section("Current appearance mode:") {
+                Label(
+                    viewModel.isDarkMode ? "Dark Mode" : "Light Mode",
+                    systemImage: viewModel.isDarkMode ? "moon.fill" : "sun.max.fill"
+                )
+            }
+            
+            Section {
+                Button {
+                    Task { await viewModel.toggleMode() }
+                } label: {
+                    Label("Toggle Appearance Mode", systemImage: "switch.2")
+                }
+                .keyboardShortcut("a", modifiers: [.command, .shift])
+            }
+    
+            Section {
+                Button {
+                    viewModel.openSettings()
+                } label: {
+                    Label("Settings", systemImage: "gearshape")
+                }
+                .keyboardShortcut(",", modifiers: .command)
+            }
+            
+            Section {
+                Button("Quit") {
+                    viewModel.quitApp()
+                }
+            }
         }
-        
-        // Settings button
-        Button(action: {
-            SettingsOpener.openSettings()
-        }) {
-            Label("Settings", systemImage: "gearshape")
-        }
-        .keyboardShortcut(",", modifiers: .command)
-        
-        Divider()
-        
-        // Quit button
-        Button("Quit") {
-            NSApplication.shared.terminate(nil)
-        }
+        .task { await viewModel.onAppear() }
     }
 }

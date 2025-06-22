@@ -8,6 +8,16 @@ struct DarkModeViewModelTests {
     private var mockService: MockDarkModeService = MockDarkModeService()
 }
 
-private class MockDarkModeService: DarkModeServiceProtocol {
-    // TODO: Implement mock
+private final class MockDarkModeService: DarkModeServiceProtocol, @unchecked Sendable {
+    func getCurrentMode() async -> AppearanceMode {
+        return .light
+    }
+    
+    func setMode(_ mode: AppearanceMode) {
+        // Mock implementation
+    }
+    
+    func toggleMode() async {
+        // Mock implementation
+    }
 }
