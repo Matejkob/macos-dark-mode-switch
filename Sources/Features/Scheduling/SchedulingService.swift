@@ -3,13 +3,21 @@ import Foundation
 struct SchedulingService: SchedulingServiceProtocol {
     private let launchAgentInfo = LaunchAgentInfo.shared
     private let preferencesRepository: any PreferencesRepository
+    private let fileSystemProvider: any FileSystemProvider
+    private let launchctlProcessRunner: any ProcessRunner
     
-    init(preferencesRepository: any PreferencesRepository = UserDefaultsPreferencesRepository()) {
+    init(
+        preferencesRepository: any PreferencesRepository = UserDefaultsPreferencesRepository(),
+        fileSystemProvider: any FileSystemProvider = DefaultFileSystemProvider(),
+        launchctlProcessRunner: any ProcessRunner = FoundationProcessRunner(launchPath: "/bin/launchctl")
+    ) {
         self.preferencesRepository = preferencesRepository
+        self.fileSystemProvider = fileSystemProvider
+        self.launchctlProcessRunner = launchctlProcessRunner
     }
     
     private var launchAgentsDirectory: URL {
-        FileManager.default.homeDirectoryForCurrentUser
+        fileSystemProvider.homeDirectoryForCurrentUser
             .appendingPathComponent("Library")
             .appendingPathComponent("LaunchAgents")
     }
@@ -25,7 +33,7 @@ struct SchedulingService: SchedulingServiceProtocol {
         try saveSchedulePreferences(darkModeTime: darkModeTime, lightModeTime: lightModeTime, enabled: true)
         
         // Create and register single launch agent that runs every 5 minutes
-        try createAndRegisterSchedulerAgent(scriptPath: scriptPath)
+        try await createAndRegisterSchedulerAgent(scriptPath: scriptPath)
     }
     
     func disableAutomaticScheduling() async throws {
@@ -33,7 +41,7 @@ struct SchedulingService: SchedulingServiceProtocol {
         try saveSchedulePreferences(darkModeTime: Date(), lightModeTime: Date(), enabled: false)
         
         // Unregister and remove launch agent
-        try unregisterAndRemoveLaunchAgent(label: launchAgentInfo.agentLabel)
+        try await unregisterAndRemoveLaunchAgent(label: launchAgentInfo.agentLabel)
     }
     
     func updateSchedule(darkModeTime: Date, lightModeTime: Date) async throws {
@@ -43,7 +51,7 @@ struct SchedulingService: SchedulingServiceProtocol {
     
     func isSchedulingEnabled() -> Bool {
         let agentPath = launchAgentsDirectory.appendingPathComponent("\(launchAgentInfo.agentLabel).plist")
-        return FileManager.default.fileExists(atPath: agentPath.path)
+        return fileSystemProvider.fileExists(atPath: agentPath.path)
     }
     
     // MARK: - Private Methods
@@ -52,8 +60,8 @@ struct SchedulingService: SchedulingServiceProtocol {
         let launchAgentsPath = launchAgentsDirectory.path
         var isDirectory: ObjCBool = false
         
-        if !FileManager.default.fileExists(atPath: launchAgentsPath, isDirectory: &isDirectory) {
-            try FileManager.default.createDirectory(at: launchAgentsDirectory, withIntermediateDirectories: true)
+        if !fileSystemProvider.fileExists(atPath: launchAgentsPath, isDirectory: &isDirectory) {
+            try fileSystemProvider.createDirectory(at: launchAgentsDirectory, withIntermediateDirectories: true)
         } else if !isDirectory.boolValue {
             throw SchedulingError.fileSystemError("LaunchAgents path exists but is not a directory")
         }
@@ -61,22 +69,22 @@ struct SchedulingService: SchedulingServiceProtocol {
     
     private func getOrCreateScriptPath() throws -> String {
         // Try to get script from bundle first
-        if let bundleScriptPath = Bundle.main.path(forResource: "set-appearance-mode", ofType: "sh"),
-           FileManager.default.fileExists(atPath: bundleScriptPath) {
+        if let bundleScriptPath = fileSystemProvider.bundlePath(forResource: "set-appearance-mode", ofType: "sh"),
+           fileSystemProvider.fileExists(atPath: bundleScriptPath) {
             return bundleScriptPath
         }
         
         // Fall back to the script we created in the project
         let projectScriptPath = Bundle.main.bundlePath + "/Contents/Resources/set-appearance-mode.sh"
-        if FileManager.default.fileExists(atPath: projectScriptPath) {
+        if fileSystemProvider.fileExists(atPath: projectScriptPath) {
             return projectScriptPath
         }
         
         // As last resort, create script in user's home directory
-        let homeScriptPath = FileManager.default.homeDirectoryForCurrentUser
+        let homeScriptPath = fileSystemProvider.homeDirectoryForCurrentUser
             .appendingPathComponent(".darkmodeswitch-script.sh")
         
-        if !FileManager.default.fileExists(atPath: homeScriptPath.path) {
+        if !fileSystemProvider.fileExists(atPath: homeScriptPath.path) {
             try createScriptFile(at: homeScriptPath)
         }
         
@@ -226,11 +234,12 @@ struct SchedulingService: SchedulingServiceProtocol {
 
         """###
         
-        try scriptContent.write(to: url, atomically: true, encoding: .utf8)
+        let data = scriptContent.data(using: .utf8)!
+        try fileSystemProvider.writeData(data, to: url, options: .atomic)
         
         // Make script executable
         let attributes = [FileAttributeKey.posixPermissions: 0o755]
-        try FileManager.default.setAttributes(attributes, ofItemAtPath: url.path)
+        try fileSystemProvider.setAttributes(attributes, ofItemAtPath: url.path)
     }
     
     private func saveSchedulePreferences(darkModeTime: Date, lightModeTime: Date, enabled: Bool) throws {
@@ -239,30 +248,28 @@ struct SchedulingService: SchedulingServiceProtocol {
         preferencesRepository.setLightModeTime(lightModeTime)
     }
     
-    private func createAndRegisterSchedulerAgent(scriptPath: String) throws {
+    private func createAndRegisterSchedulerAgent(scriptPath: String) async throws {
         let plistContent = createSchedulerAgentPlist(scriptPath: scriptPath)
         let plistPath = launchAgentsDirectory.appendingPathComponent("\(launchAgentInfo.agentLabel).plist")
         
         // Write plist file
-        try plistContent.write(to: plistPath, atomically: true, encoding: .utf8)
+        let data = plistContent.data(using: .utf8)!
+        try fileSystemProvider.writeData(data, to: plistPath, options: .atomic)
         
         // Register with launchctl
-        let registerResult = runCommand("/bin/launchctl", arguments: ["load", plistPath.path])
-        if registerResult.exitCode != 0 {
-            throw SchedulingError.launchAgentRegistrationFailed
-        }
+        try await launchctlProcessRunner.run(arguments: "load", plistPath.path)
     }
     
-    private func unregisterAndRemoveLaunchAgent(label: String) throws {
+    private func unregisterAndRemoveLaunchAgent(label: String) async throws {
         let plistPath = launchAgentsDirectory.appendingPathComponent("\(label).plist")
         
         // First try to unregister if it exists
-        if FileManager.default.fileExists(atPath: plistPath.path) {
-            _ = runCommand("/bin/launchctl", arguments: ["unload", plistPath.path])
+        if fileSystemProvider.fileExists(atPath: plistPath.path) {
+            try await launchctlProcessRunner.run(arguments: "unload", plistPath.path)
             // Don't throw error if unload fails - agent might not be loaded
             
             // Remove plist file
-            try FileManager.default.removeItem(at: plistPath)
+            try fileSystemProvider.removeItem(at: plistPath)
         }
     }
     
@@ -289,27 +296,5 @@ struct SchedulingService: SchedulingServiceProtocol {
         </dict>
         </plist>
         """
-    }
-    
-    private func runCommand(_ command: String, arguments: [String]) -> (output: String, exitCode: Int32) {
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: command)
-        process.arguments = arguments
-        
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = pipe
-        
-        do {
-            try process.run()
-            process.waitUntilExit()
-            
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
-            let output = String(data: data, encoding: .utf8) ?? ""
-            
-            return (output, process.terminationStatus)
-        } catch {
-            return ("", -1)
-        }
     }
 }

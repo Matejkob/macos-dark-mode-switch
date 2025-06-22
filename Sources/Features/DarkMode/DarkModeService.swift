@@ -3,14 +3,10 @@ import AppKit
 import Cocoa
 
 struct DarkModeService: DarkModeServiceProtocol {
-    typealias ProcessRunner = @Sendable ([ProcessHandler.ProcessCommand.Argument]) async throws -> Data
-    
-    private let osascriptProcessRunner: ProcessRunner
+    private let osascriptProcessRunner: any ProcessRunner
     
     init(
-        osascriptProcessRunner: @escaping ProcessRunner = { arguments in
-            try await ProcessHandler(launchPath: "/usr/bin/osascript").run(arguments: arguments)
-        }
+        osascriptProcessRunner: any ProcessRunner = FoundationProcessRunner(launchPath: "/usr/bin/osascript")
     ) {
         self.osascriptProcessRunner = osascriptProcessRunner
     }
@@ -22,7 +18,7 @@ struct DarkModeService: DarkModeServiceProtocol {
         """
         
         do {
-            let data = try await osascriptProcessRunner(["-e", script])
+            let data = try await osascriptProcessRunner.run(arguments: "-e", script)
             let output = String(data: data, encoding: .utf8)?
                 .trimmingCharacters(in: .whitespacesAndNewlines)
             
@@ -44,6 +40,6 @@ struct DarkModeService: DarkModeServiceProtocol {
         tell application "System Events" to tell appearance preferences to set dark mode to not dark mode
         """
         
-        let _ = try await osascriptProcessRunner(["-e", script])
+        try await osascriptProcessRunner.run(arguments: "-e", script)
     }
 }
