@@ -57,17 +57,17 @@ final class SettingsViewModel {
     }
     
     private func loadSettings() async {
-        automaticSwitchingEnabled = await preferencesRepository.getAutomaticSwitchingEnabled()
+        automaticSwitchingEnabled = preferencesRepository.getAutomaticSwitchingEnabled()
         
         // Load times with defaults
-        if let darkModeTimeData = await preferencesRepository.getDarkModeTime() {
+        if let darkModeTimeData = preferencesRepository.getDarkModeTime() {
             darkModeTime = darkModeTimeData
         } else {
             // Default to 9 PM
             darkModeTime = Calendar.current.date(bySettingHour: 21, minute: 0, second: 0, of: Date()) ?? Date()
         }
         
-        if let lightModeTimeData = await preferencesRepository.getLightModeTime() {
+        if let lightModeTimeData = preferencesRepository.getLightModeTime() {
             lightModeTime = lightModeTimeData
         } else {
             // Default to 7 AM
@@ -82,8 +82,8 @@ final class SettingsViewModel {
     }
     
     private func saveSettings() async {
-        await preferencesRepository.setAutomaticSwitchingEnabled(automaticSwitchingEnabled)
-        await preferencesRepository.setDarkModeTime(darkModeTime)
-        await preferencesRepository.setLightModeTime(lightModeTime)
+        preferencesRepository.setAutomaticSwitchingEnabled(automaticSwitchingEnabled)
+        preferencesRepository.setDarkModeTime(darkModeTime)
+        preferencesRepository.setLightModeTime(lightModeTime)
     }
 }
