@@ -8,7 +8,10 @@ protocol DarkModeServiceProtocol {
 }
 
 protocol SchedulingServiceProtocol {
-    // TODO: Define scheduling service interface
+    func enableAutomaticScheduling(darkModeTime: Date, lightModeTime: Date) throws
+    func disableAutomaticScheduling() throws
+    func updateSchedule(darkModeTime: Date, lightModeTime: Date) throws
+    func isSchedulingEnabled() -> Bool
 }
 
 protocol PreferencesServiceProtocol {
