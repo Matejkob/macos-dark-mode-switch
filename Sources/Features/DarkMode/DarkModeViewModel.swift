@@ -4,28 +4,24 @@ import SwiftUI
 @MainActor
 @Observable
 final class DarkModeViewModel {
+    var currentMode: AppearanceMode = .light
     
-        var currentMode: AppearanceMode = .light
+    private let darkModeService: any DarkModeServiceProtocol
     
-        private let darkModeService: DarkModeServiceProtocol
-    
-        init(darkModeService: DarkModeServiceProtocol) {
+    init(darkModeService: any DarkModeServiceProtocol) {
         self.darkModeService = darkModeService
-        refreshCurrentMode()
     }
     
-        
-    func toggleMode() {
-        darkModeService.toggleMode()
-        refreshCurrentMode()
+    func onAppear() async {
+        await refreshCurrentMode()
     }
     
-    func setMode(_ mode: AppearanceMode) {
-        darkModeService.setMode(mode)
-        refreshCurrentMode()
+    func toggleMode() async throws {
+        try await darkModeService.toggleMode()
+        await refreshCurrentMode()
     }
     
-    func refreshCurrentMode() {
-        currentMode = darkModeService.getCurrentMode()
+    private func refreshCurrentMode() async {
+        currentMode = await darkModeService.getCurrentMode()
     }
 }

@@ -16,7 +16,10 @@ struct DarkModeSwitchApp: App {
         .defaultSize(width: 1, height: 1)
         .windowStyle(.hiddenTitleBar)
         
-        MenuBarExtra("Dark Mode Switch", systemImage: menuBarViewModel.isDarkMode ? "moon.fill" : "sun.max.fill") {
+        MenuBarExtra(
+            "Dark Mode Switch",
+            systemImage: menuBarViewModel.isDarkMode ? "moon.fill" : "sun.max.fill"
+        ) {
             MenuBarView(viewModel: menuBarViewModel)
         }
         .menuBarExtraStyle(.menu)

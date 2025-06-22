@@ -2,20 +2,19 @@ import Foundation
 
 struct SchedulingService: SchedulingServiceProtocol {
     private let launchAgentInfo = LaunchAgentInfo.shared
-    private let fileManager = FileManager.default
-    private var preferencesRepository: any PreferencesRepository
+    private let preferencesRepository: any PreferencesRepository
     
     init(preferencesRepository: any PreferencesRepository = UserDefaultsPreferencesRepository()) {
         self.preferencesRepository = preferencesRepository
     }
     
     private var launchAgentsDirectory: URL {
-        fileManager.homeDirectoryForCurrentUser
+        FileManager.default.homeDirectoryForCurrentUser
             .appendingPathComponent("Library")
             .appendingPathComponent("LaunchAgents")
     }
     
-    func enableAutomaticScheduling(darkModeTime: Date, lightModeTime: Date) throws {
+    func enableAutomaticScheduling(darkModeTime: Date, lightModeTime: Date) async throws {
         // First ensure Launch Agents directory exists
         try createLaunchAgentsDirectoryIfNeeded()
         
@@ -29,7 +28,7 @@ struct SchedulingService: SchedulingServiceProtocol {
         try createAndRegisterSchedulerAgent(scriptPath: scriptPath)
     }
     
-    func disableAutomaticScheduling() throws {
+    func disableAutomaticScheduling() async throws {
         // Disable scheduling in preferences
         try saveSchedulePreferences(darkModeTime: Date(), lightModeTime: Date(), enabled: false)
         
@@ -37,14 +36,14 @@ struct SchedulingService: SchedulingServiceProtocol {
         try unregisterAndRemoveLaunchAgent(label: launchAgentInfo.agentLabel)
     }
     
-    func updateSchedule(darkModeTime: Date, lightModeTime: Date) throws {
+    func updateSchedule(darkModeTime: Date, lightModeTime: Date) async throws {
         // Simply update the preferences - the agent will pick up the changes
         try saveSchedulePreferences(darkModeTime: darkModeTime, lightModeTime: lightModeTime, enabled: true)
     }
     
     func isSchedulingEnabled() -> Bool {
         let agentPath = launchAgentsDirectory.appendingPathComponent("\(launchAgentInfo.agentLabel).plist")
-        return fileManager.fileExists(atPath: agentPath.path)
+        return FileManager.default.fileExists(atPath: agentPath.path)
     }
     
     // MARK: - Private Methods
@@ -53,8 +52,8 @@ struct SchedulingService: SchedulingServiceProtocol {
         let launchAgentsPath = launchAgentsDirectory.path
         var isDirectory: ObjCBool = false
         
-        if !fileManager.fileExists(atPath: launchAgentsPath, isDirectory: &isDirectory) {
-            try fileManager.createDirectory(at: launchAgentsDirectory, withIntermediateDirectories: true)
+        if !FileManager.default.fileExists(atPath: launchAgentsPath, isDirectory: &isDirectory) {
+            try FileManager.default.createDirectory(at: launchAgentsDirectory, withIntermediateDirectories: true)
         } else if !isDirectory.boolValue {
             throw SchedulingError.fileSystemError("LaunchAgents path exists but is not a directory")
         }
@@ -63,21 +62,21 @@ struct SchedulingService: SchedulingServiceProtocol {
     private func getOrCreateScriptPath() throws -> String {
         // Try to get script from bundle first
         if let bundleScriptPath = Bundle.main.path(forResource: "set-appearance-mode", ofType: "sh"),
-           fileManager.fileExists(atPath: bundleScriptPath) {
+           FileManager.default.fileExists(atPath: bundleScriptPath) {
             return bundleScriptPath
         }
         
         // Fall back to the script we created in the project
         let projectScriptPath = Bundle.main.bundlePath + "/Contents/Resources/set-appearance-mode.sh"
-        if fileManager.fileExists(atPath: projectScriptPath) {
+        if FileManager.default.fileExists(atPath: projectScriptPath) {
             return projectScriptPath
         }
         
         // As last resort, create script in user's home directory
-        let homeScriptPath = fileManager.homeDirectoryForCurrentUser
+        let homeScriptPath = FileManager.default.homeDirectoryForCurrentUser
             .appendingPathComponent(".darkmodeswitch-script.sh")
         
-        if !fileManager.fileExists(atPath: homeScriptPath.path) {
+        if !FileManager.default.fileExists(atPath: homeScriptPath.path) {
             try createScriptFile(at: homeScriptPath)
         }
         
@@ -231,13 +230,13 @@ struct SchedulingService: SchedulingServiceProtocol {
         
         // Make script executable
         let attributes = [FileAttributeKey.posixPermissions: 0o755]
-        try fileManager.setAttributes(attributes, ofItemAtPath: url.path)
+        try FileManager.default.setAttributes(attributes, ofItemAtPath: url.path)
     }
     
     private func saveSchedulePreferences(darkModeTime: Date, lightModeTime: Date, enabled: Bool) throws {
-        preferencesRepository.automaticSwitchingEnabled = enabled
-        preferencesRepository.darkModeTime = darkModeTime
-        preferencesRepository.lightModeTime = lightModeTime
+        preferencesRepository.setAutomaticSwitchingEnabled(enabled)
+        preferencesRepository.setDarkModeTime(darkModeTime)
+        preferencesRepository.setLightModeTime(lightModeTime)
     }
     
     private func createAndRegisterSchedulerAgent(scriptPath: String) throws {
@@ -258,12 +257,12 @@ struct SchedulingService: SchedulingServiceProtocol {
         let plistPath = launchAgentsDirectory.appendingPathComponent("\(label).plist")
         
         // First try to unregister if it exists
-        if fileManager.fileExists(atPath: plistPath.path) {
+        if FileManager.default.fileExists(atPath: plistPath.path) {
             _ = runCommand("/bin/launchctl", arguments: ["unload", plistPath.path])
             // Don't throw error if unload fails - agent might not be loaded
             
             // Remove plist file
-            try fileManager.removeItem(at: plistPath)
+            try FileManager.default.removeItem(at: plistPath)
         }
     }
     

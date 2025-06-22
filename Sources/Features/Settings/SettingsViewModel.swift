@@ -17,51 +17,57 @@ final class SettingsViewModel {
     ) {
         self.schedulingService = schedulingService
         self.preferencesRepository = preferencesRepository
-        loadSettings()
+        Task {
+            await loadSettings()
+        }
     }
     
     func save() {
-        do {
-            if automaticSwitchingEnabled {
-                if schedulingService.isSchedulingEnabled() {
-                    // Update existing schedule
-                    try schedulingService.updateSchedule(darkModeTime: darkModeTime, lightModeTime: lightModeTime)
+        Task {
+            do {
+                if automaticSwitchingEnabled {
+                    if schedulingService.isSchedulingEnabled() {
+                        // Update existing schedule
+                        try await schedulingService.updateSchedule(darkModeTime: darkModeTime, lightModeTime: lightModeTime)
+                    } else {
+                        // Enable new schedule
+                        try await schedulingService.enableAutomaticScheduling(darkModeTime: darkModeTime, lightModeTime: lightModeTime)
+                    }
                 } else {
-                    // Enable new schedule
-                    try schedulingService.enableAutomaticScheduling(darkModeTime: darkModeTime, lightModeTime: lightModeTime)
+                    // Disable scheduling if it was enabled
+                    if schedulingService.isSchedulingEnabled() {
+                        try await schedulingService.disableAutomaticScheduling()
+                    }
                 }
-            } else {
-                // Disable scheduling if it was enabled
-                if schedulingService.isSchedulingEnabled() {
-                    try schedulingService.disableAutomaticScheduling()
-                }
+                
+                // Save to UserDefaults
+                await saveSettings()
+                
+            } catch {
+                print("Failed to save scheduling settings: \(error)")
+                // TODO: Show error to user
             }
-            
-            // Save to UserDefaults
-            saveSettings()
-            
-        } catch {
-            print("Failed to save scheduling settings: \(error)")
-            // TODO: Show error to user
         }
     }
     
     func cancel() {
-        loadSettings()
+        Task {
+            await loadSettings()
+        }
     }
     
-    private func loadSettings() {
-        automaticSwitchingEnabled = preferencesRepository.automaticSwitchingEnabled
+    private func loadSettings() async {
+        automaticSwitchingEnabled = await preferencesRepository.getAutomaticSwitchingEnabled()
         
         // Load times with defaults
-        if let darkModeTimeData = preferencesRepository.darkModeTime {
+        if let darkModeTimeData = await preferencesRepository.getDarkModeTime() {
             darkModeTime = darkModeTimeData
         } else {
             // Default to 9 PM
             darkModeTime = Calendar.current.date(bySettingHour: 21, minute: 0, second: 0, of: Date()) ?? Date()
         }
         
-        if let lightModeTimeData = preferencesRepository.lightModeTime {
+        if let lightModeTimeData = await preferencesRepository.getLightModeTime() {
             lightModeTime = lightModeTimeData
         } else {
             // Default to 7 AM
@@ -75,9 +81,9 @@ final class SettingsViewModel {
         }
     }
     
-    private func saveSettings() {
-        preferencesRepository.automaticSwitchingEnabled = automaticSwitchingEnabled
-        preferencesRepository.darkModeTime = darkModeTime
-        preferencesRepository.lightModeTime = lightModeTime
+    private func saveSettings() async {
+        await preferencesRepository.setAutomaticSwitchingEnabled(automaticSwitchingEnabled)
+        await preferencesRepository.setDarkModeTime(darkModeTime)
+        await preferencesRepository.setLightModeTime(lightModeTime)
     }
 }

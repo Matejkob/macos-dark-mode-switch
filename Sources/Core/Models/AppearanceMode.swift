@@ -5,7 +5,3 @@ enum AppearanceMode: String, CaseIterable {
     case dark = "dark"
     case auto = "auto"
 }
-
-struct AppSettings {
-    // TODO: Define app-wide settings
-}

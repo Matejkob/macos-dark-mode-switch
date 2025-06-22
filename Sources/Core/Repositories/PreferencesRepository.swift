@@ -1,7 +1,10 @@
 import Foundation
 
 protocol PreferencesRepository: Sendable {
-    var automaticSwitchingEnabled: Bool { get set }
-    var darkModeTime: Date? { get set }
-    var lightModeTime: Date? { get set }
+    func getAutomaticSwitchingEnabled() -> Bool
+    func setAutomaticSwitchingEnabled(_ enabled: Bool)
+    func getDarkModeTime() -> Date?
+    func setDarkModeTime(_ time: Date?)
+    func getLightModeTime() -> Date?
+    func setLightModeTime(_ time: Date?)
 }
