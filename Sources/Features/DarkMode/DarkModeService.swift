@@ -6,7 +6,9 @@ struct DarkModeService: DarkModeServiceProtocol {
     private let osascriptProcessRunner: any ProcessRunner
     
     init(
-        osascriptProcessRunner: any ProcessRunner = FoundationProcessRunner(launchPath: "/usr/bin/osascript")
+        osascriptProcessRunner: any ProcessRunner = FoundationProcessRunner(
+            launchPath: "/usr/bin/osascript"
+        )
     ) {
         self.osascriptProcessRunner = osascriptProcessRunner
     }
