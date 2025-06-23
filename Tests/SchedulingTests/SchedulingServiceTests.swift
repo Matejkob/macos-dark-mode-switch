@@ -3,5 +3,12 @@ import Testing
 
 @Suite("Scheduling Service Tests")
 struct SchedulingServiceTests {
-    private var sut: SchedulingService = SchedulingService()
+    let preferencesRepositorySpy = PreferencesRepositorySpy()
+    let fileSystemProviderSpy = FileSystemProviderSpy()
+    let launchctlProcessRunnerSpy = ProcessRunnerSpy()
+    lazy var sut = SchedulingService(
+        preferencesRepository: preferencesRepositorySpy,
+        fileSystemProvider: fileSystemProviderSpy,
+        launchctlProcessRunner: launchctlProcessRunnerSpy
+    )
 }

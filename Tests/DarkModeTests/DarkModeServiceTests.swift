@@ -3,5 +3,6 @@ import Testing
 
 @Suite("Dark Mode Service Tests")
 struct DarkModeServiceTests {
-    private var sut: DarkModeService = DarkModeService()
+    let osascriptProcessRunnerSpy = ProcessRunnerSpy()
+    lazy var sut = DarkModeService(osascriptProcessRunner: osascriptProcessRunnerSpy)
 }

@@ -1,10 +1,11 @@
 import Testing
 @testable import App
 
-@Suite("Menu Bar View Model Tests")
 @MainActor
+@Suite("Menu Bar View Model Tests")
 struct MenuBarViewModelTests {
-    private var sut: MenuBarViewModel = MenuBarViewModel(
-        darkModeViewModel: DarkModeViewModel(darkModeService: DarkModeService())
+    let darkModeServiceSpy = DarkModeServiceSpy()
+    lazy var sut: MenuBarViewModel = MenuBarViewModel(
+        darkModeViewModel: DarkModeViewModel(darkModeService: darkModeServiceSpy)
     )
 }

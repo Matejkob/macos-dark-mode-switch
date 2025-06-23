@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "25557CE9-6DD5-422A-B363-EDCEECAC22D5",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:DarkModeSwitch.xcodeproj",
+        "identifier" : "4578DF2C2E0584C200C35580",
+        "name" : "Tests"
+      }
+    }
+  ],
+  "version" : 1
+}
