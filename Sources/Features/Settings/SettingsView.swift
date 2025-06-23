@@ -1,7 +1,10 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @State private var viewModel = SettingsViewModel()
+    @State private var viewModel = SettingsViewModel(
+        schedulingService: SchedulingService(),
+        preferencesRepository: UserDefaultsPreferencesRepository()
+    )
     
     var body: some View {
         Form {
@@ -27,17 +30,28 @@ struct SettingsView: View {
             
             Section {
                 HStack {
-                    Button("Cancel", action: viewModel.cancel)
-                        .buttonStyle(.bordered)
+                    Button("Cancel") {
+                        Task {
+                            await viewModel.cancel()
+                        }
+                    }
+                    .buttonStyle(.bordered)
                     
                     Spacer()
                     
-                    Button("Save", action: viewModel.save)
-                        .buttonStyle(.borderedProminent)
+                    Button("Save") {
+                        Task {
+                            try? await viewModel.save()
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
             }
         }
         .formStyle(.grouped)
         .frame(maxWidth: 350, minHeight: 100)
+        .task {
+            await viewModel.onAppear()
+        }
     }
 }
