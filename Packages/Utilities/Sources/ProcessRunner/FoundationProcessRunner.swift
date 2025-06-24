@@ -1,16 +1,20 @@
 import Foundation
 
-struct FoundationProcessRunner: ProcessRunner {
+public struct FoundationProcessRunner: ProcessRunner {
     // FIXME: `launchPath` property well be deprecated in the future version of macOS.
-    let launchPath: String
+    public let launchPath: String
+    
+    public init(launchPath: String) {
+        self.launchPath = launchPath
+    }
     
     @discardableResult
-    func run(arguments: ProcessCommand.Argument...) async throws -> Data {
+    public func run(arguments: ProcessCommand.Argument...) async throws -> Data {
         try await run(process: ProcessCommand(arguments: arguments))
     }
     
     @discardableResult
-    func run(process: ProcessCommand) async throws -> Data {
+    public func run(process: ProcessCommand) async throws -> Data {
         try await withCheckedThrowingContinuation { continuation in
             let subProcess = Process()
             let standardOutputPipe = Pipe()

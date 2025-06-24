@@ -1,4 +1,5 @@
 import Foundation
+@testable import Utilities
 @testable import App
 
 final class ProcessRunnerSpy: ProcessRunner, @unchecked Sendable {
@@ -7,7 +8,7 @@ final class ProcessRunnerSpy: ProcessRunner, @unchecked Sendable {
     var runWithArgumentsCalledCount = 0
     var runWithArgumentsReceivedArguments: [[ProcessCommand.Argument]] = []
     var runWithArgumentsReturnValue: Data = Data()
-    var runWithArgumentsShouldThrow: Error?
+    var runWithArgumentsShouldThrow: (any Error)?
 
     @discardableResult
     func run(arguments: ProcessCommand.Argument...) async throws -> Data {
@@ -24,7 +25,7 @@ final class ProcessRunnerSpy: ProcessRunner, @unchecked Sendable {
     var runWithProcessCalledCount = 0
     var runWithProcessReceivedArguments: [ProcessCommand] = []
     var runWithProcessReturnValue: Data = Data()
-    var runWithProcessShouldThrow: Error?
+    var runWithProcessShouldThrow: (any Error)?
 
     @discardableResult
     func run(process: ProcessCommand) async throws -> Data {

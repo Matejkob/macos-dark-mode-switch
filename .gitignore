@@ -119,3 +119,5 @@ Temporary Items
 
 # Claude 
 .claude/settings.local.json
+
+.vscode.

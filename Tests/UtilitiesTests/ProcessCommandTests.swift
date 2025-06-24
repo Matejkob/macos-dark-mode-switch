@@ -1,6 +1,7 @@
 import Testing
 import Foundation
 @testable import App
+@testable import Utilities
 
 @Suite("Process Command Tests")
 struct ProcessCommandTests {
