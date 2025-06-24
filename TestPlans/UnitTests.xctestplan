@@ -14,6 +14,13 @@
   "testTargets" : [
     {
       "target" : {
+        "containerPath" : "container:Packages\/Utilities",
+        "identifier" : "UtilitiesTests",
+        "name" : "UtilitiesTests"
+      }
+    },
+    {
+      "target" : {
         "containerPath" : "container:DarkModeSwitch.xcodeproj",
         "identifier" : "4578DF2C2E0584C200C35580",
         "name" : "Tests"

@@ -1,6 +1,6 @@
 import Foundation
 
-protocol ProcessRunner: Sendable {
+public protocol ProcessRunner: Sendable {
     @discardableResult
     func run(arguments: ProcessCommand.Argument...) async throws -> Data
     @discardableResult

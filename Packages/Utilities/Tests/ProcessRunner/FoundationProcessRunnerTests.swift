@@ -1,5 +1,6 @@
 import Testing
-@testable import App
+@testable import Utilities
+import Foundation
 
 @Suite("Foundation Process Runner Tests")
 struct FoundationProcessRunnerTests {

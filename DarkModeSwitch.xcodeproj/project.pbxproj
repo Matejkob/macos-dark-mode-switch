@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		45D727DC2E089C7F000C48F6 /* TestPlan.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 45D727DB2E089C7F000C48F6 /* TestPlan.xctestplan */; };
+		453477522E0AC32F00401C3C /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = 453477512E0AC32F00401C3C /* Utilities */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,10 +23,19 @@
 /* Begin PBXFileReference section */
 		4578DE832E05783800C35580 /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4578DF2D2E0584C200C35580 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		45D727DB2E089C7F000C48F6 /* TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestPlan.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		453778152E0ABD9000EEAF38 /* Packages */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Packages;
+			sourceTree = "<group>";
+		};
+		4554E4112E0A8FE100338180 /* TestPlans */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = TestPlans;
+			sourceTree = "<group>";
+		};
 		4578DE852E05783800C35580 /* Sources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Sources;
@@ -44,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				453477522E0AC32F00401C3C /* Utilities in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,12 +67,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		453477502E0AC32F00401C3C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		4578DE7A2E05783800C35580 = {
 			isa = PBXGroup;
 			children = (
+				453778152E0ABD9000EEAF38 /* Packages */,
 				4578DE852E05783800C35580 /* Sources */,
 				4578DF2E2E0584C200C35580 /* Tests */,
-				45D727DB2E089C7F000C48F6 /* TestPlan.xctestplan */,
+				4554E4112E0A8FE100338180 /* TestPlans */,
+				453477502E0AC32F00401C3C /* Frameworks */,
 				4578DE842E05783800C35580 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -92,10 +111,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				453778152E0ABD9000EEAF38 /* Packages */,
+				4554E4112E0A8FE100338180 /* TestPlans */,
 				4578DE852E05783800C35580 /* Sources */,
 			);
 			name = App;
 			packageProductDependencies = (
+				453477512E0AC32F00401C3C /* Utilities */,
 			);
 			productName = DarkModeSwitch;
 			productReference = 4578DE832E05783800C35580 /* App.app */;
@@ -168,7 +190,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45D727DC2E089C7F000C48F6 /* TestPlan.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,7 +422,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mateuszbak.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_UPCOMING_FEATURE_EXISTENTIAL_ANY = YES;
+				SWIFT_UPCOMING_FEATURE_INTERNAL_IMPORTS_BY_DEFAULT = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/App";
 			};
 			name = Debug;
@@ -418,7 +442,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mateuszbak.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
+				SWIFT_UPCOMING_FEATURE_EXISTENTIAL_ANY = YES;
+				SWIFT_UPCOMING_FEATURE_INTERNAL_IMPORTS_BY_DEFAULT = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/App";
 			};
 			name = Release;
@@ -454,6 +481,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		453477512E0AC32F00401C3C /* Utilities */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Utilities;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4578DE7B2E05783800C35580 /* Project object */;
 }

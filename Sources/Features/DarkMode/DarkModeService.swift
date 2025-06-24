@@ -1,6 +1,7 @@
 import Foundation
 import AppKit
 import Cocoa
+import Utilities
 
 struct DarkModeService: DarkModeServiceProtocol {
     private let osascriptProcessRunner: any ProcessRunner
