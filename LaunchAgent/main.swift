@@ -1,11 +1,12 @@
-//
-//  main.swift
-//  LaunchAgent
-//
-//  Created by Mateusz Bąk on 6/26/25.
-//
-
 import Foundation
+import Utilities
 
-print("Hello, World!")
+let appearanceSwitcher = AppearanceSwitcher()
 
+do {
+    try await appearanceSwitcher.checkAndSwitchIfNeeded()
+} catch {
+    exit(1)
+}
+
+exit(0)

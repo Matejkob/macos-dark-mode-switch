@@ -1,6 +1,7 @@
 import Testing
 import Foundation
 @testable import App
+import Utilities
 
 @Suite("UserDefaults Preferences Repository Tests", .serialized)
 struct UserDefaultsPreferencesRepositoryTests {
