@@ -14,16 +14,23 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:Packages\/Utilities",
-        "identifier" : "UtilitiesTests",
-        "name" : "UtilitiesTests"
+        "containerPath" : "container:DarkModeSwitch.xcodeproj",
+        "identifier" : "4578DF2C2E0584C200C35580",
+        "name" : "Tests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:DarkModeSwitch.xcodeproj",
-        "identifier" : "4578DF2C2E0584C200C35580",
-        "name" : "Tests"
+        "containerPath" : "container:Packages\/AppearanceSwitcher",
+        "identifier" : "AppearanceSwitcherTests",
+        "name" : "AppearanceSwitcherTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Packages\/Utilities",
+        "identifier" : "UtilitiesTests",
+        "name" : "UtilitiesTests"
       }
     }
   ],

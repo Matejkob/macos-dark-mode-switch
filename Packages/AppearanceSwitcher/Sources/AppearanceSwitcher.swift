@@ -1,13 +1,13 @@
 import Foundation
 import Utilities
 
-struct AppearanceSwitcher {
+public struct AppearanceSwitcher {
     private let preferencesRepository: any PreferencesRepository
     private let osascriptProcessRunner: any ProcessRunner
     private let timeCalculator: AppearanceSwitcherTimeCalculator
     private let dateProvider: () -> Date
     
-    init(
+    public init(
         preferencesRepository: any PreferencesRepository = UserDefaultsPreferencesRepository(),
         osascriptProcessRunner: any ProcessRunner = FoundationProcessRunner(launchPath: "/usr/bin/osascript"),
         timeCalculator: AppearanceSwitcherTimeCalculator = AppearanceSwitcherTimeCalculator(),
@@ -19,7 +19,7 @@ struct AppearanceSwitcher {
         self.dateProvider = dateProvider
     }
     
-    func checkAndSwitchIfNeeded() async throws {
+    public func checkAndSwitchIfNeeded() async throws {
         // Check if automatic switching is enabled
         guard preferencesRepository.getAutomaticSwitchingEnabled() else {
             return

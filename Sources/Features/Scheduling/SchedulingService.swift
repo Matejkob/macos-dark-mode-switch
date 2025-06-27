@@ -1,4 +1,5 @@
 import Foundation
+import Utilities
 
 struct SchedulingService: SchedulingServiceProtocol {
     private let preferencesRepository: any PreferencesRepository

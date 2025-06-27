@@ -1,5 +1,5 @@
 import Foundation
-import Utilities
+import AppearanceSwitcher
 
 let appearanceSwitcher = AppearanceSwitcher()
 

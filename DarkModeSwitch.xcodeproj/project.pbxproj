@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		453477522E0AC32F00401C3C /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = 453477512E0AC32F00401C3C /* Utilities */; };
-		45EE1B2E2E0DEF380085A617 /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = 45EE1B2D2E0DEF380085A617 /* Utilities */; };
 		45EE1B372E0DF0810085A617 /* LaunchAgent in Resources */ = {isa = PBXBuildFile; fileRef = 45EE1B262E0DEF2C0085A617 /* LaunchAgent */; };
+		45F7F7A82E0E9F7E0085CCD0 /* AppearanceSwitcher in Frameworks */ = {isa = PBXBuildFile; productRef = 45F7F7A72E0E9F7E0085CCD0 /* AppearanceSwitcher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,7 +118,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				45EE1B2E2E0DEF380085A617 /* Utilities in Frameworks */,
+				45F7F7A82E0E9F7E0085CCD0 /* AppearanceSwitcher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,6 +226,7 @@
 			name = LaunchAgent;
 			packageProductDependencies = (
 				45EE1B2D2E0DEF380085A617 /* Utilities */,
+				45F7F7A72E0E9F7E0085CCD0 /* AppearanceSwitcher */,
 			);
 			productName = LaunchAgent;
 			productReference = 45EE1B262E0DEF2C0085A617 /* LaunchAgent */;
@@ -625,6 +626,10 @@
 		45EE1B2D2E0DEF380085A617 /* Utilities */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Utilities;
+		};
+		45F7F7A72E0E9F7E0085CCD0 /* AppearanceSwitcher */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppearanceSwitcher;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

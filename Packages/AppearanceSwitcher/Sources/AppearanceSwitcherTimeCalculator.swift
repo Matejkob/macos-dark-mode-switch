@@ -1,13 +1,13 @@
 import Foundation
 
-struct AppearanceSwitcherTimeCalculator {
+public struct AppearanceSwitcherTimeCalculator {
     let calendar: Calendar
     
-    init(calendar: Calendar = .current) {
+    public init(calendar: Calendar = .current) {
         self.calendar = calendar
     }
     
-    func shouldBeDarkMode(
+    public func shouldBeDarkMode(
         currentDate: Date,
         darkModeTime: Date,
         lightModeTime: Date
