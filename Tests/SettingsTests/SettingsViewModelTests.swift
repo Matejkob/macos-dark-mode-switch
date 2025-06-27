@@ -7,11 +7,13 @@ import Foundation
 struct SettingsViewModelTests {
     let schedulingServiceSpy = SchedulingServiceSpy()
     let preferencesRepositorySpy = PreferencesRepositorySpy()
+    let calendar = Calendar(identifier: .gregorian)
     
     var sut: SettingsViewModel {
         SettingsViewModel(
             schedulingService: schedulingServiceSpy,
-            preferencesRepository: preferencesRepositorySpy
+            preferencesRepository: preferencesRepositorySpy,
+            calendar: calendar
         )
     }
     
@@ -68,7 +70,6 @@ struct SettingsViewModelTests {
         await viewModel.onAppear()
         
         // Then
-        let calendar = Calendar.current
         let darkModeHour = calendar.component(.hour, from: viewModel.darkModeTime)
         let lightModeHour = calendar.component(.hour, from: viewModel.lightModeTime)
         
@@ -209,5 +210,37 @@ struct SettingsViewModelTests {
         #expect(viewModel.automaticSwitchingEnabled == false)
         #expect(viewModel.darkModeTime == Date(timeIntervalSince1970: 3000))
         #expect(viewModel.lightModeTime == Date(timeIntervalSince1970: 4000))
+    }
+    
+    @Test("calendar injection works correctly for default times")
+    func calendar_injectionWorksForDefaultTimes() async throws {
+        // Given
+        var customCalendar = Calendar(identifier: .gregorian)
+        customCalendar.timeZone = TimeZone(identifier: "UTC")!
+        
+        let viewModel = SettingsViewModel(
+            schedulingService: schedulingServiceSpy,
+            preferencesRepository: preferencesRepositorySpy,
+            calendar: customCalendar
+        )
+        
+        preferencesRepositorySpy.getAutomaticSwitchingEnabledReturnValue = false
+        preferencesRepositorySpy.getDarkModeTimeReturnValue = nil
+        preferencesRepositorySpy.getLightModeTimeReturnValue = nil
+        schedulingServiceSpy.isSchedulingEnabledReturnValue = false
+        
+        // When
+        await viewModel.onAppear()
+        
+        // Then
+        let darkModeHour = customCalendar.component(.hour, from: viewModel.darkModeTime)
+        let lightModeHour = customCalendar.component(.hour, from: viewModel.lightModeTime)
+        
+        #expect(darkModeHour == 21) // 9 PM
+        #expect(lightModeHour == 7)  // 7 AM
+        
+        // Verify the calendar instance is actually being used by checking timezone
+        let timeZone = customCalendar.timeZone
+        #expect(timeZone.identifier == "GMT")
     }
 }

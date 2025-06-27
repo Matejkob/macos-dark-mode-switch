@@ -4,7 +4,8 @@ import Utilities
 struct SettingsView: View {
     @State private var viewModel = SettingsViewModel(
         schedulingService: SchedulingService(),
-        preferencesRepository: UserDefaultsPreferencesRepository()
+        preferencesRepository: UserDefaultsPreferencesRepository(),
+        calendar: Calendar.current
     )
     
     var body: some View {

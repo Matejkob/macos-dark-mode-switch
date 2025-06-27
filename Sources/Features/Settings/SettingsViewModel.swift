@@ -11,13 +11,16 @@ final class SettingsViewModel {
     
     private let schedulingService: any SchedulingServiceProtocol
     private var preferencesRepository: any PreferencesRepository
+    private let calendar: Calendar
     
     init(
         schedulingService: any SchedulingServiceProtocol,
-        preferencesRepository: any PreferencesRepository
+        preferencesRepository: any PreferencesRepository,
+        calendar: Calendar = Calendar.current
     ) {
         self.schedulingService = schedulingService
         self.preferencesRepository = preferencesRepository
+        self.calendar = calendar
     }
     
     func onAppear() async {
@@ -54,7 +57,7 @@ final class SettingsViewModel {
             darkModeTime = darkModeTimeData
         } else {
             // Default to 9 PM
-            darkModeTime = Calendar.current.date(
+            darkModeTime = calendar.date(
                 bySettingHour: 21,
                 minute: 0,
                 second: 0,
@@ -66,7 +69,7 @@ final class SettingsViewModel {
             lightModeTime = lightModeTimeData
         } else {
             // Default to 7 AM
-            lightModeTime = Calendar.current.date(
+            lightModeTime = calendar.date(
                 bySettingHour: 7,
                 minute: 0,
                 second: 0,
