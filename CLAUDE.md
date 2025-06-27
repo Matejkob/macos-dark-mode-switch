@@ -1,44 +1,62 @@
-# DarkModeSwitch - macOS Menu Bar App
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
+
 A simple macOS menu bar application that provides enhanced control over dark mode switching with custom time scheduling.
 
-## Problem Statement
+### Problem Statement
+
 macOS offers automatic dark/light mode switching, but users cannot set custom times for when these switches occur. This app addresses that limitation by providing user-configurable scheduling.
 
-## Core Features
+## Build and Development Commands
 
-### Menu Bar Interface
-- Toggle switch for manual dark/light mode switching
-- Quick access from menu bar icon
-- Status indicator showing current mode
+### Building the App
+- **Command line build**: `xcodebuild -project DarkModeSwitch.xcodeproj -scheme App -configuration Debug build`
 
-### Settings Panel
-- Time picker for automatic dark mode activation
-- Time picker for automatic light mode activation
-- Enable/disable automatic switching
-- Override system preferences when active
+### Testing
+- **Run all tests**: Use the `Tests` scheme in Xcode or `xcodebuild -project DarkModeSwitch.xcodeproj -scheme Tests test`
+- **Test plan**: Uses `TestPlans/UnitTests.xctestplan` for comprehensive test coverage
 
-## Technical Requirements
-- macOS native app (Swift/SwiftUI)
-- Menu bar application (NSStatusItem)
-- System appearance control via NSApplication.shared.appearance
-- Local preferences storage
-- Background scheduling for automatic mode switching
+### Package Development
+- **Utilities package**: Located in `Packages/Utilities/` - contains shared utilities like ProcessRunner and PreferencesRepository
+- **AppearanceSwitcher package**: Located in `Packages/AppearanceSwitcher/` - core appearance switching logic
+- **Package tests**: Each package has its own test suite that can be run independently
 
-## User Experience
-1. Install and launch app
-2. App appears in menu bar with current mode indicator
-3. Click menu bar icon to access quick toggle and settings
-4. Configure custom switch times in settings panel
-5. App automatically switches modes at specified times
+## Architecture Overview
 
-## Development Approach
-- Start with basic menu bar app structure
-- Implement manual toggle functionality
-- Add settings panel with time pickers
-- Integrate background scheduling
-- Polish UI and add status indicators
+This is a macOS menu bar application that switches between light and dark appearance modes. The app uses a modular Swift Package Manager architecture with dependency injection.
+
+### Core Structure
+- **App Target**: Main SwiftUI application with menu bar interface
+- **LaunchAgent**: Separate command-line tool for scheduled appearance switching
+- **Local Packages**: Two SPM packages for modular code organization
+
+### Key Architectural Patterns
+- **MVVM Pattern**: ViewModels handle business logic, Views are purely declarative SwiftUI
+- **Dependency Injection**: Services are injected into ViewModels for testability
+- **Protocol-Oriented Design**: Core services use protocols for easy mocking in tests
+- **Repository Pattern**: PreferencesRepository abstracts UserDefaults access
+
+### Module Breakdown
+- **Features/**: Contains feature-specific code organized by domain (DarkMode, MenuBar, Scheduling, Settings)
+- **Core/**: Shared models, utilities, and window management code
+- **Packages/Utilities/**: ProcessRunner for shell commands, PreferencesRepository for settings storage
+- **Packages/AppearanceSwitcher/**: Core appearance switching logic and time calculations
+- **Tests/**: Comprehensive test suite with spy objects for all major services
+
+### Key Services
+- **DarkModeService**: Manages system appearance switching via `osascript` commands
+- **SchedulingService**: Handles automated appearance switching at specified times
+- **PreferencesRepository**: Manages app preferences storage and retrieval
+- **ProcessRunner**: Executes shell commands with error handling
+
+### Testing Strategy
+- **Spy Pattern**: All external dependencies have spy implementations for testing
+- **Protocol Mocking**: Services implement protocols to enable easy test doubles
+- **Comprehensive Coverage**: Tests cover ViewModels, Services, and Utilities
+- **Test Doubles**: Located in `Tests/Spies/` for consistent mocking approach
 
 ## Code Style Rules
 
