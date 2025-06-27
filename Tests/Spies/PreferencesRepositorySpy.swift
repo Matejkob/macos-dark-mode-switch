@@ -1,5 +1,6 @@
 import Foundation
 @testable import App
+import Utilities
 
 final class PreferencesRepositorySpy: PreferencesRepository, @unchecked Sendable {
     // MARK: - getAutomaticSwitchingEnabled

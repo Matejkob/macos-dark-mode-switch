@@ -6,12 +6,5 @@
 	<false/>
 	<key>com.apple.security.files.user-selected.read-only</key>
 	<true/>
-	<key>com.apple.security.scripting-targets</key>
-	<dict>
-		<key>com.apple.systemevents</key>
-		<array>
-			<string>com.apple.systemevents.appearance-preferences</string>
-		</array>
-	</dict>
 </dict>
 </plist>

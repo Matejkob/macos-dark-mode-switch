@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		453477522E0AC32F00401C3C /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = 453477512E0AC32F00401C3C /* Utilities */; };
+		45EE1B372E0DF0810085A617 /* LaunchAgent in Resources */ = {isa = PBXBuildFile; fileRef = 45EE1B262E0DEF2C0085A617 /* LaunchAgent */; };
+		45F7F7A82E0E9F7E0085CCD0 /* AppearanceSwitcher in Frameworks */ = {isa = PBXBuildFile; productRef = 45F7F7A72E0E9F7E0085CCD0 /* AppearanceSwitcher */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -18,12 +20,52 @@
 			remoteGlobalIDString = 4578DE822E05783800C35580;
 			remoteInfo = App;
 		};
+		45EE1B2F2E0DEF400085A617 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4578DE7B2E05783800C35580 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 45EE1B252E0DEF2C0085A617;
+			remoteInfo = LaunchAgent;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		45EE1B242E0DEF2C0085A617 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		45EE1B342E0DF04C0085A617 /* Copy Agent Plist */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LaunchAgents;
+			dstSubfolderSpec = 1;
+			files = (
+			);
+			name = "Copy Agent Plist";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4578DE832E05783800C35580 /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4578DF2D2E0584C200C35580 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		45EE1B262E0DEF2C0085A617 /* LaunchAgent */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LaunchAgent; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		45EE1B362E0DF0790085A617 /* Exceptions for "LaunchAgent" folder in "Copy Agent Plist" phase from "App" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 45EE1B342E0DF04C0085A617 /* Copy Agent Plist */;
+			membershipExceptions = (
+				io.github.matejkob.DarkModeSwitch.LaunchAgent.plist,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		453778152E0ABD9000EEAF38 /* Packages */ = {
@@ -46,6 +88,14 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
+		45EE1B272E0DEF2C0085A617 /* LaunchAgent */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				45EE1B362E0DF0790085A617 /* Exceptions for "LaunchAgent" folder in "Copy Agent Plist" phase from "App" target */,
+			);
+			path = LaunchAgent;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +114,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		45EE1B232E0DEF2C0085A617 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				45F7F7A82E0E9F7E0085CCD0 /* AppearanceSwitcher in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -79,6 +137,7 @@
 			children = (
 				453778152E0ABD9000EEAF38 /* Packages */,
 				4578DE852E05783800C35580 /* Sources */,
+				45EE1B272E0DEF2C0085A617 /* LaunchAgent */,
 				4578DF2E2E0584C200C35580 /* Tests */,
 				4554E4112E0A8FE100338180 /* TestPlans */,
 				453477502E0AC32F00401C3C /* Frameworks */,
@@ -91,6 +150,7 @@
 			children = (
 				4578DE832E05783800C35580 /* App.app */,
 				4578DF2D2E0584C200C35580 /* Tests.xctest */,
+				45EE1B262E0DEF2C0085A617 /* LaunchAgent */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -105,10 +165,12 @@
 				4578DE7F2E05783800C35580 /* Sources */,
 				4578DE802E05783800C35580 /* Frameworks */,
 				4578DE812E05783800C35580 /* Resources */,
+				45EE1B342E0DF04C0085A617 /* Copy Agent Plist */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				45EE1B302E0DEF400085A617 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				453778152E0ABD9000EEAF38 /* Packages */,
@@ -146,6 +208,30 @@
 			productReference = 4578DF2D2E0584C200C35580 /* Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		45EE1B252E0DEF2C0085A617 /* LaunchAgent */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 45EE1B2C2E0DEF2C0085A617 /* Build configuration list for PBXNativeTarget "LaunchAgent" */;
+			buildPhases = (
+				45EE1B222E0DEF2C0085A617 /* Sources */,
+				45EE1B232E0DEF2C0085A617 /* Frameworks */,
+				45EE1B242E0DEF2C0085A617 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				45EE1B272E0DEF2C0085A617 /* LaunchAgent */,
+			);
+			name = LaunchAgent;
+			packageProductDependencies = (
+				45EE1B2D2E0DEF380085A617 /* Utilities */,
+				45F7F7A72E0E9F7E0085CCD0 /* AppearanceSwitcher */,
+			);
+			productName = LaunchAgent;
+			productReference = 45EE1B262E0DEF2C0085A617 /* LaunchAgent */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -162,6 +248,9 @@
 					4578DF2C2E0584C200C35580 = {
 						CreatedOnToolsVersion = 16.4;
 						TestTargetID = 4578DE822E05783800C35580;
+					};
+					45EE1B252E0DEF2C0085A617 = {
+						CreatedOnToolsVersion = 16.4;
 					};
 				};
 			};
@@ -180,6 +269,7 @@
 			projectRoot = "";
 			targets = (
 				4578DE822E05783800C35580 /* App */,
+				45EE1B252E0DEF2C0085A617 /* LaunchAgent */,
 				4578DF2C2E0584C200C35580 /* Tests */,
 			);
 		};
@@ -190,6 +280,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45EE1B372E0DF0810085A617 /* LaunchAgent in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,6 +308,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		45EE1B222E0DEF2C0085A617 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -224,6 +322,11 @@
 			isa = PBXTargetDependency;
 			target = 4578DE822E05783800C35580 /* App */;
 			targetProxy = 4578DF312E0584C200C35580 /* PBXContainerItemProxy */;
+		};
+		45EE1B302E0DEF400085A617 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 45EE1B252E0DEF2C0085A617 /* LaunchAgent */;
+			targetProxy = 45EE1B2F2E0DEF400085A617 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -368,7 +471,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mateuszbak.DarkModeSwitch;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.matejkob.DarkModeSwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -399,7 +502,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mateuszbak.DarkModeSwitch;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.matejkob.DarkModeSwitch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -419,7 +522,7 @@
 				DEVELOPMENT_TEAM = 9RSVCT9A9H;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mateuszbak.Tests;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.matejkob.DarkModeSwitch.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_EXISTENTIAL_ANY = YES;
@@ -439,7 +542,7 @@
 				DEVELOPMENT_TEAM = 9RSVCT9A9H;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mateuszbak.Tests;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.matejkob.DarkModeSwitch.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_EXISTENTIAL_ANY = YES;
@@ -447,6 +550,30 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 6.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/App";
+			};
+			name = Release;
+		};
+		45EE1B2A2E0DEF2C0085A617 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9RSVCT9A9H;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.matejkob.DarkModeSwitch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		45EE1B2B2E0DEF2C0085A617 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9RSVCT9A9H;
+				ENABLE_HARDENED_RUNTIME = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.matejkob.DarkModeSwitch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -480,12 +607,29 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		45EE1B2C2E0DEF2C0085A617 /* Build configuration list for PBXNativeTarget "LaunchAgent" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				45EE1B2A2E0DEF2C0085A617 /* Debug */,
+				45EE1B2B2E0DEF2C0085A617 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		453477512E0AC32F00401C3C /* Utilities */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Utilities;
+		};
+		45EE1B2D2E0DEF380085A617 /* Utilities */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Utilities;
+		};
+		45F7F7A72E0E9F7E0085CCD0 /* AppearanceSwitcher */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppearanceSwitcher;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
