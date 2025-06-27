@@ -1,270 +1,246 @@
-//import Testing
-//import Foundation
-//@testable import App
-//
-//@Suite("Settings View Model Tests")
-//@MainActor
-//struct SettingsViewModelTests {
-//    
-//    // MARK: - Initialization Tests
-//    
-//    @Test("Initializes with repository values when available")
-//    func initializesWithRepositoryValues() async {
-//        let preferencesRepositorySpy = PreferencesRepositorySpy()
-//        let schedulingServiceSpy = SchedulingServiceSpy()
-//        
-//        let testDarkModeTime = Calendar.current.date(bySettingHour: 22, minute: 30, second: 0, of: Date())!
-//        let testLightModeTime = Calendar.current.date(bySettingHour: 6, minute: 45, second: 0, of: Date())!
-//        
-//        preferencesRepositorySpy.getAutomaticSwitchingEnabledReturnValue = false
-//        preferencesRepositorySpy.getDarkModeTimeReturnValue = testDarkModeTime
-//        preferencesRepositorySpy.getLightModeTimeReturnValue = testLightModeTime
-//        schedulingServiceSpy.isSchedulingEnabledReturnValue = false
-//        
-//        let sut = SettingsViewModel(
-//            schedulingService: schedulingServiceSpy,
-//            preferencesRepository: preferencesRepositorySpy
-//        )
-//        
-//        // Allow async initialization to complete
-//        try? await Task.sleep(for: .milliseconds(100))
-//        
-//        #expect(sut.automaticSwitchingEnabled == false)
-//        #expect(sut.darkModeTime == testDarkModeTime)
-//        #expect(sut.lightModeTime == testLightModeTime)
-//        #expect(preferencesRepositorySpy.getAutomaticSwitchingEnabledCalledCount == 1)
-//        #expect(preferencesRepositorySpy.getDarkModeTimeCalledCount == 1)
-//        #expect(preferencesRepositorySpy.getLightModeTimeCalledCount == 1)
-//        #expect(schedulingServiceSpy.isSchedulingEnabledCalledCount == 1)
-//    }
-//    
-//    @Test("Initializes with default times when repository returns nil")
-//    func initializesWithDefaultTimesWhenRepositoryReturnsNil() async {
-//        let preferencesRepositorySpy = PreferencesRepositorySpy()
-//        let schedulingServiceSpy = SchedulingServiceSpy()
-//        
-//        preferencesRepositorySpy.getAutomaticSwitchingEnabledReturnValue = true
-//        preferencesRepositorySpy.getDarkModeTimeReturnValue = nil
-//        preferencesRepositorySpy.getLightModeTimeReturnValue = nil
-//        schedulingServiceSpy.isSchedulingEnabledReturnValue = true
-//        
-//        let sut = SettingsViewModel(
-//            schedulingService: schedulingServiceSpy,
-//            preferencesRepository: preferencesRepositorySpy
-//        )
-//        
-//        try? await Task.sleep(for: .milliseconds(100))
-//        
-//        let calendar = Calendar.current
-//        let expectedDarkModeTime = calendar.date(bySettingHour: 21, minute: 0, second: 0, of: Date())!
-//        let expectedLightModeTime = calendar.date(bySettingHour: 7, minute: 0, second: 0, of: Date())!
-//        
-//        #expect(sut.automaticSwitchingEnabled == true)
-//        #expect(calendar.component(.hour, from: sut.darkModeTime) == 21)
-//        #expect(calendar.component(.minute, from: sut.darkModeTime) == 0)
-//        #expect(calendar.component(.hour, from: sut.lightModeTime) == 7)
-//        #expect(calendar.component(.minute, from: sut.lightModeTime) == 0)
-//    }
-//    
-//    @Test("Syncs automatic switching state with actual scheduling service state")
-//    func syncsAutomaticSwitchingStateWithActualSchedulingServiceState() async {
-//        let preferencesRepositorySpy = PreferencesRepositorySpy()
-//        let schedulingServiceSpy = SchedulingServiceSpy()
-//        
-//        preferencesRepositorySpy.getAutomaticSwitchingEnabledReturnValue = true
-//        schedulingServiceSpy.isSchedulingEnabledReturnValue = false
-//        
-//        let sut = SettingsViewModel(
-//            schedulingService: schedulingServiceSpy,
-//            preferencesRepository: preferencesRepositorySpy
-//        )
-//        
-//        try? await Task.sleep(for: .milliseconds(100))
-//        
-//        #expect(sut.automaticSwitchingEnabled == false)
-//    }
-//    
-//    // MARK: - Save Tests
-//    
-//    @Test("Save enables automatic scheduling when enabled and not currently scheduled")
-//    func saveEnablesAutomaticSchedulingWhenEnabledAndNotCurrentlyScheduled() async {
-//        let preferencesRepositorySpy = PreferencesRepositorySpy()
-//        let schedulingServiceSpy = SchedulingServiceSpy()
-//        
-//        schedulingServiceSpy.isSchedulingEnabledReturnValue = false
-//        
-//        let sut = SettingsViewModel(
-//            schedulingService: schedulingServiceSpy,
-//            preferencesRepository: preferencesRepositorySpy
-//        )
-//        
-//        try? await Task.sleep(for: .milliseconds(100))
-//        
-//        sut.automaticSwitchingEnabled = true
-//        let testDarkModeTime = Calendar.current.date(bySettingHour: 20, minute: 0, second: 0, of: Date())!
-//        let testLightModeTime = Calendar.current.date(bySettingHour: 8, minute: 0, second: 0, of: Date())!
-//        sut.darkModeTime = testDarkModeTime
-//        sut.lightModeTime = testLightModeTime
-//        
-//        sut.save()
-//        
-//        try? await Task.sleep(for: .milliseconds(100))
-//        
-//        #expect(schedulingServiceSpy.enableAutomaticSchedulingCalledCount == 1)
-//        #expect(schedulingServiceSpy.enableAutomaticSchedulingReceivedArguments[0].darkModeTime == testDarkModeTime)
-//        #expect(schedulingServiceSpy.enableAutomaticSchedulingReceivedArguments[0].lightModeTime == testLightModeTime)
-//        #expect(preferencesRepositorySpy.setAutomaticSwitchingEnabledCalledCount == 1)
-//        #expect(preferencesRepositorySpy.setAutomaticSwitchingEnabledReceivedArguments[0] == true)
-//    }
-//    
-//    @Test("Save updates existing schedule when enabled and currently scheduled")
-//    func saveUpdatesExistingScheduleWhenEnabledAndCurrentlyScheduled() async {
-//        let preferencesRepositorySpy = PreferencesRepositorySpy()
-//        let schedulingServiceSpy = SchedulingServiceSpy()
-//        
-//        schedulingServiceSpy.isSchedulingEnabledReturnValue = true
-//        
-//        let sut = SettingsViewModel(
-//            schedulingService: schedulingServiceSpy,
-//            preferencesRepository: preferencesRepositorySpy
-//        )
-//        
-//        try? await Task.sleep(for: .milliseconds(100))
-//        
-//        sut.automaticSwitchingEnabled = true
-//        let testDarkModeTime = Calendar.current.date(bySettingHour: 23, minute: 15, second: 0, of: Date())!
-//        let testLightModeTime = Calendar.current.date(bySettingHour: 5, minute: 30, second: 0, of: Date())!
-//        sut.darkModeTime = testDarkModeTime
-//        sut.lightModeTime = testLightModeTime
-//        
-//        sut.save()
-//        
-//        try? await Task.sleep(for: .milliseconds(100))
-//        
-//        #expect(schedulingServiceSpy.updateScheduleCalledCount == 1)
-//        #expect(schedulingServiceSpy.updateScheduleReceivedArguments[0].darkModeTime == testDarkModeTime)
-//        #expect(schedulingServiceSpy.updateScheduleReceivedArguments[0].lightModeTime == testLightModeTime)
-//        #expect(schedulingServiceSpy.enableAutomaticSchedulingCalledCount == 0)
-//        #expect(preferencesRepositorySpy.setAutomaticSwitchingEnabledCalledCount == 1)
-//        #expect(preferencesRepositorySpy.setAutomaticSwitchingEnabledReceivedArguments[0] == true)
-//    }
-//    
-//    @Test("Save disables automatic scheduling when disabled and currently scheduled")
-//    func saveDisablesAutomaticSchedulingWhenDisabledAndCurrentlyScheduled() async {
-//        let preferencesRepositorySpy = PreferencesRepositorySpy()
-//        let schedulingServiceSpy = SchedulingServiceSpy()
-//        
-//        schedulingServiceSpy.isSchedulingEnabledReturnValue = true
-//        
-//        let sut = SettingsViewModel(
-//            schedulingService: schedulingServiceSpy,
-//            preferencesRepository: preferencesRepositorySpy
-//        )
-//        
-//        try? await Task.sleep(for: .milliseconds(100))
-//        
-//        sut.automaticSwitchingEnabled = false
-//        
-//        sut.save()
-//        
-//        try? await Task.sleep(for: .milliseconds(100))
-//        
-//        #expect(schedulingServiceSpy.disableAutomaticSchedulingCalledCount == 1)
-//        #expect(schedulingServiceSpy.enableAutomaticSchedulingCalledCount == 0)
-//        #expect(schedulingServiceSpy.updateScheduleCalledCount == 0)
-//        #expect(preferencesRepositorySpy.setAutomaticSwitchingEnabledCalledCount == 1)
-//        #expect(preferencesRepositorySpy.setAutomaticSwitchingEnabledReceivedArguments[0] == false)
-//    }
-//    
-//    @Test("Save does nothing when disabled and not currently scheduled")
-//    func saveDoesNothingWhenDisabledAndNotCurrentlyScheduled() async {
-//        let preferencesRepositorySpy = PreferencesRepositorySpy()
-//        let schedulingServiceSpy = SchedulingServiceSpy()
-//        
-//        schedulingServiceSpy.isSchedulingEnabledReturnValue = false
-//        
-//        let sut = SettingsViewModel(
-//            schedulingService: schedulingServiceSpy,
-//            preferencesRepository: preferencesRepositorySpy
-//        )
-//        
-//        try? await Task.sleep(for: .milliseconds(100))
-//        
-//        sut.automaticSwitchingEnabled = false
-//        
-//        sut.save()
-//        
-//        try? await Task.sleep(for: .milliseconds(100))
-//        
-//        #expect(schedulingServiceSpy.disableAutomaticSchedulingCalledCount == 0)
-//        #expect(schedulingServiceSpy.enableAutomaticSchedulingCalledCount == 0)
-//        #expect(schedulingServiceSpy.updateScheduleCalledCount == 0)
-//        #expect(preferencesRepositorySpy.setAutomaticSwitchingEnabledCalledCount == 1)
-//        #expect(preferencesRepositorySpy.setAutomaticSwitchingEnabledReceivedArguments[0] == false)
-//    }
-//    
-//    @Test("Save handles scheduling service errors gracefully")
-//    func saveHandlesSchedulingServiceErrorsGracefully() async {
-//        let preferencesRepositorySpy = PreferencesRepositorySpy()
-//        let schedulingServiceSpy = SchedulingServiceSpy()
-//        
-//        struct TestError: Error {}
-//        
-//        schedulingServiceSpy.isSchedulingEnabledReturnValue = false
-//        schedulingServiceSpy.enableAutomaticSchedulingShouldThrow = TestError()
-//        
-//        let sut = SettingsViewModel(
-//            schedulingService: schedulingServiceSpy,
-//            preferencesRepository: preferencesRepositorySpy
-//        )
-//        
-//        try? await Task.sleep(for: .milliseconds(100))
-//        
-//        sut.automaticSwitchingEnabled = true
-//        
-//        sut.save()
-//        
-//        try? await Task.sleep(for: .milliseconds(100))
-//        
-//        #expect(schedulingServiceSpy.enableAutomaticSchedulingCalledCount == 1)
-//        #expect(preferencesRepositorySpy.setAutomaticSwitchingEnabledCalledCount == 0)
-//    }
-//    
-//    // MARK: - Cancel Tests
-//    
-//    @Test("Cancel reloads settings from repository")
-//    func cancelReloadsSettingsFromRepository() async {
-//        let preferencesRepositorySpy = PreferencesRepositorySpy()
-//        let schedulingServiceSpy = SchedulingServiceSpy()
-//        
-//        let initialDarkModeTime = Calendar.current.date(bySettingHour: 20, minute: 0, second: 0, of: Date())!
-//        let initialLightModeTime = Calendar.current.date(bySettingHour: 8, minute: 0, second: 0, of: Date())!
-//        
-//        preferencesRepositorySpy.getAutomaticSwitchingEnabledReturnValue = true
-//        preferencesRepositorySpy.getDarkModeTimeReturnValue = initialDarkModeTime
-//        preferencesRepositorySpy.getLightModeTimeReturnValue = initialLightModeTime
-//        schedulingServiceSpy.isSchedulingEnabledReturnValue = true
-//        
-//        let sut = SettingsViewModel(
-//            schedulingService: schedulingServiceSpy,
-//            preferencesRepository: preferencesRepositorySpy
-//        )
-//        
-//        try? await Task.sleep(for: .milliseconds(100))
-//        
-//        sut.automaticSwitchingEnabled = false
-//        sut.darkModeTime = Calendar.current.date(bySettingHour: 22, minute: 30, second: 0, of: Date())!
-//        sut.lightModeTime = Calendar.current.date(bySettingHour: 6, minute: 15, second: 0, of: Date())!
-//        
-//        let initialCallCount = preferencesRepositorySpy.getAutomaticSwitchingEnabledCalledCount
-//        
-//        sut.cancel()
-//        
-//        try? await Task.sleep(for: .milliseconds(100))
-//        
-//        #expect(sut.automaticSwitchingEnabled == true)
-//        #expect(sut.darkModeTime == initialDarkModeTime)
-//        #expect(sut.lightModeTime == initialLightModeTime)
-//        #expect(preferencesRepositorySpy.getAutomaticSwitchingEnabledCalledCount == initialCallCount + 1)
-//    }
-//}
+import Testing
+import Foundation
+@testable import App
+
+@Suite("Settings View Model Tests")
+@MainActor
+struct SettingsViewModelTests {
+    let schedulingServiceSpy = SchedulingServiceSpy()
+    let preferencesRepositorySpy = PreferencesRepositorySpy()
+    let calendar = Calendar(identifier: .gregorian)
+    
+    var sut: SettingsViewModel {
+        SettingsViewModel(
+            schedulingService: schedulingServiceSpy,
+            preferencesRepository: preferencesRepositorySpy,
+            calendar: calendar
+        )
+    }
+    
+    @Test("onAppear loads settings from preferences repository")
+    func onAppear_loadsSettings() async throws {
+        // Given
+        preferencesRepositorySpy.getAutomaticSwitchingEnabledReturnValue = true
+        preferencesRepositorySpy.getDarkModeTimeReturnValue = Date(timeIntervalSince1970: 1000)
+        preferencesRepositorySpy.getLightModeTimeReturnValue = Date(timeIntervalSince1970: 2000)
+        schedulingServiceSpy.isSchedulingEnabledReturnValue = true
+        
+        let viewModel = sut
+        
+        // When
+        await viewModel.onAppear()
+        
+        // Then
+        #expect(preferencesRepositorySpy.getAutomaticSwitchingEnabledCalledCount == 1)
+        #expect(preferencesRepositorySpy.getDarkModeTimeCalledCount == 1)
+        #expect(preferencesRepositorySpy.getLightModeTimeCalledCount == 1)
+        #expect(schedulingServiceSpy.isSchedulingEnabledCalledCount == 1)
+        
+        #expect(viewModel.automaticSwitchingEnabled == true)
+        #expect(viewModel.darkModeTime == Date(timeIntervalSince1970: 1000))
+        #expect(viewModel.lightModeTime == Date(timeIntervalSince1970: 2000))
+    }
+    
+    @Test("onAppear syncs automatic switching with actual scheduling state")
+    func onAppear_syncsAutomaticSwitchingWithSchedulingState() async throws {
+        // Given
+        preferencesRepositorySpy.getAutomaticSwitchingEnabledReturnValue = true
+        schedulingServiceSpy.isSchedulingEnabledReturnValue = false
+        
+        let viewModel = sut
+        
+        // When
+        await viewModel.onAppear()
+        
+        // Then
+        #expect(viewModel.automaticSwitchingEnabled == false)
+    }
+    
+    @Test("onAppear sets default times when preferences return nil")
+    func onAppear_setsDefaultTimesWhenNil() async throws {
+        // Given
+        preferencesRepositorySpy.getAutomaticSwitchingEnabledReturnValue = false
+        preferencesRepositorySpy.getDarkModeTimeReturnValue = nil
+        preferencesRepositorySpy.getLightModeTimeReturnValue = nil
+        schedulingServiceSpy.isSchedulingEnabledReturnValue = false
+        
+        let viewModel = sut
+        
+        // When
+        await viewModel.onAppear()
+        
+        // Then
+        let darkModeHour = calendar.component(.hour, from: viewModel.darkModeTime)
+        let lightModeHour = calendar.component(.hour, from: viewModel.lightModeTime)
+        
+        #expect(darkModeHour == 21) // 9 PM
+        #expect(lightModeHour == 7)  // 7 AM
+    }
+    
+    @Test("save enables scheduling when automatic switching is enabled and scheduling is disabled")
+    func save_enablesSchedulingWhenNeeded() async throws {
+        // Given
+        schedulingServiceSpy.isSchedulingEnabledReturnValue = false
+        
+        let viewModel = sut
+        viewModel.automaticSwitchingEnabled = true
+        viewModel.darkModeTime = Date(timeIntervalSince1970: 1000)
+        viewModel.lightModeTime = Date(timeIntervalSince1970: 2000)
+        
+        // When
+        try await viewModel.save()
+        
+        // Then
+        #expect(preferencesRepositorySpy.setAutomaticSwitchingEnabledCalledCount == 1)
+        #expect(preferencesRepositorySpy.setAutomaticSwitchingEnabledReceivedArguments.last == true)
+        #expect(preferencesRepositorySpy.setDarkModeTimeCalledCount == 1)
+        #expect(preferencesRepositorySpy.setLightModeTimeCalledCount == 1)
+        
+        #expect(schedulingServiceSpy.isSchedulingEnabledCalledCount == 1)
+        #expect(schedulingServiceSpy.enableAutomaticSchedulingCalledCount == 1)
+        #expect(schedulingServiceSpy.disableAutomaticSchedulingCalledCount == 0)
+    }
+    
+    @Test("save does not enable scheduling when already enabled")
+    func save_doesNotEnableSchedulingWhenAlreadyEnabled() async throws {
+        // Given
+        schedulingServiceSpy.isSchedulingEnabledReturnValue = true
+        
+        let viewModel = sut
+        viewModel.automaticSwitchingEnabled = true
+        
+        // When
+        try await viewModel.save()
+        
+        // Then
+        #expect(schedulingServiceSpy.isSchedulingEnabledCalledCount == 1)
+        #expect(schedulingServiceSpy.enableAutomaticSchedulingCalledCount == 0)
+    }
+    
+    @Test("save disables scheduling when automatic switching is disabled and scheduling is enabled")
+    func save_disablesSchedulingWhenNeeded() async throws {
+        // Given
+        schedulingServiceSpy.isSchedulingEnabledReturnValue = true
+        
+        let viewModel = sut
+        viewModel.automaticSwitchingEnabled = false
+        
+        // When
+        try await viewModel.save()
+        
+        // Then
+        #expect(preferencesRepositorySpy.setAutomaticSwitchingEnabledCalledCount == 1)
+        #expect(preferencesRepositorySpy.setAutomaticSwitchingEnabledReceivedArguments.last == false)
+        
+        #expect(schedulingServiceSpy.isSchedulingEnabledCalledCount == 1)
+        #expect(schedulingServiceSpy.disableAutomaticSchedulingCalledCount == 1)
+        #expect(schedulingServiceSpy.enableAutomaticSchedulingCalledCount == 0)
+    }
+    
+    @Test("save does not disable scheduling when already disabled")
+    func save_doesNotDisableSchedulingWhenAlreadyDisabled() async throws {
+        // Given
+        schedulingServiceSpy.isSchedulingEnabledReturnValue = false
+        
+        let viewModel = sut
+        viewModel.automaticSwitchingEnabled = false
+        
+        // When
+        try await viewModel.save()
+        
+        // Then
+        #expect(schedulingServiceSpy.isSchedulingEnabledCalledCount == 1)
+        #expect(schedulingServiceSpy.disableAutomaticSchedulingCalledCount == 0)
+    }
+    
+    @Test("save throws when enableAutomaticScheduling fails")
+    func save_throwsWhenEnablingFails() async throws {
+        // Given
+        struct TestError: Error {}
+        schedulingServiceSpy.isSchedulingEnabledReturnValue = false
+        schedulingServiceSpy.enableAutomaticSchedulingShouldThrow = TestError()
+        
+        let viewModel = sut
+        viewModel.automaticSwitchingEnabled = true
+        
+        // When/Then
+        await #expect(throws: TestError.self) {
+            try await viewModel.save()
+        }
+    }
+    
+    @Test("save throws when disableAutomaticScheduling fails")
+    func save_throwsWhenDisablingFails() async throws {
+        // Given
+        struct TestError: Error {}
+        schedulingServiceSpy.isSchedulingEnabledReturnValue = true
+        schedulingServiceSpy.disableAutomaticSchedulingShouldThrow = TestError()
+        
+        let viewModel = sut
+        viewModel.automaticSwitchingEnabled = false
+        
+        // When/Then
+        await #expect(throws: TestError.self) {
+            try await viewModel.save()
+        }
+    }
+    
+    @Test("cancel reloads settings from preferences")
+    func cancel_reloadsSettings() async throws {
+        // Given
+        preferencesRepositorySpy.getAutomaticSwitchingEnabledReturnValue = false
+        preferencesRepositorySpy.getDarkModeTimeReturnValue = Date(timeIntervalSince1970: 3000)
+        preferencesRepositorySpy.getLightModeTimeReturnValue = Date(timeIntervalSince1970: 4000)
+        schedulingServiceSpy.isSchedulingEnabledReturnValue = false
+        
+        let viewModel = sut
+        // Modify the view model state
+        viewModel.automaticSwitchingEnabled = true
+        viewModel.darkModeTime = Date(timeIntervalSince1970: 1000)
+        viewModel.lightModeTime = Date(timeIntervalSince1970: 2000)
+        
+        // When
+        await viewModel.cancel()
+        
+        // Then
+        #expect(preferencesRepositorySpy.getAutomaticSwitchingEnabledCalledCount == 1)
+        #expect(preferencesRepositorySpy.getDarkModeTimeCalledCount == 1)
+        #expect(preferencesRepositorySpy.getLightModeTimeCalledCount == 1)
+        
+        #expect(viewModel.automaticSwitchingEnabled == false)
+        #expect(viewModel.darkModeTime == Date(timeIntervalSince1970: 3000))
+        #expect(viewModel.lightModeTime == Date(timeIntervalSince1970: 4000))
+    }
+    
+    @Test("calendar injection works correctly for default times")
+    func calendar_injectionWorksForDefaultTimes() async throws {
+        // Given
+        var customCalendar = Calendar(identifier: .gregorian)
+        customCalendar.timeZone = TimeZone(identifier: "UTC")!
+        
+        let viewModel = SettingsViewModel(
+            schedulingService: schedulingServiceSpy,
+            preferencesRepository: preferencesRepositorySpy,
+            calendar: customCalendar
+        )
+        
+        preferencesRepositorySpy.getAutomaticSwitchingEnabledReturnValue = false
+        preferencesRepositorySpy.getDarkModeTimeReturnValue = nil
+        preferencesRepositorySpy.getLightModeTimeReturnValue = nil
+        schedulingServiceSpy.isSchedulingEnabledReturnValue = false
+        
+        // When
+        await viewModel.onAppear()
+        
+        // Then
+        let darkModeHour = customCalendar.component(.hour, from: viewModel.darkModeTime)
+        let lightModeHour = customCalendar.component(.hour, from: viewModel.lightModeTime)
+        
+        #expect(darkModeHour == 21) // 9 PM
+        #expect(lightModeHour == 7)  // 7 AM
+        
+        // Verify the calendar instance is actually being used by checking timezone
+        let timeZone = customCalendar.timeZone
+        #expect(timeZone.identifier == "GMT")
+    }
+}

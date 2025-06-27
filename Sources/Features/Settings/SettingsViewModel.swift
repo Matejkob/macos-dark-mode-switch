@@ -11,13 +11,16 @@ final class SettingsViewModel {
     
     private let schedulingService: any SchedulingServiceProtocol
     private var preferencesRepository: any PreferencesRepository
+    private let calendar: Calendar
     
     init(
         schedulingService: any SchedulingServiceProtocol,
-        preferencesRepository: any PreferencesRepository
+        preferencesRepository: any PreferencesRepository,
+        calendar: Calendar = Calendar.current
     ) {
         self.schedulingService = schedulingService
         self.preferencesRepository = preferencesRepository
+        self.calendar = calendar
     }
     
     func onAppear() async {
@@ -25,29 +28,21 @@ final class SettingsViewModel {
     }
     
     func save() async throws {
+        // Save settings to UserDefaults first
+        await saveSettings()
+        
         if automaticSwitchingEnabled {
-            if schedulingService.isSchedulingEnabled() {
-                // Update existing schedule
-                try await schedulingService.updateSchedule(
-                    darkModeTime: darkModeTime,
-                    lightModeTime: lightModeTime
-                )
-            } else {
-                // Enable new schedule
-                try await schedulingService.enableAutomaticScheduling(
-                    darkModeTime: darkModeTime,
-                    lightModeTime: lightModeTime
-                )
+            // Enable scheduling if not already enabled
+            if !schedulingService.isSchedulingEnabled() {
+                try schedulingService.enableAutomaticScheduling()
             }
+            // The launch agent will read the updated times from preferences
         } else {
             // Disable scheduling if it was enabled
             if schedulingService.isSchedulingEnabled() {
-                try await schedulingService.disableAutomaticScheduling()
+                try schedulingService.disableAutomaticScheduling()
             }
         }
-        
-        // Save to UserDefaults
-        await saveSettings()
     }
     
     func cancel() async {
@@ -62,7 +57,7 @@ final class SettingsViewModel {
             darkModeTime = darkModeTimeData
         } else {
             // Default to 9 PM
-            darkModeTime = Calendar.current.date(
+            darkModeTime = calendar.date(
                 bySettingHour: 21,
                 minute: 0,
                 second: 0,
@@ -74,7 +69,7 @@ final class SettingsViewModel {
             lightModeTime = lightModeTimeData
         } else {
             // Default to 7 AM
-            lightModeTime = Calendar.current.date(
+            lightModeTime = calendar.date(
                 bySettingHour: 7,
                 minute: 0,
                 second: 0,
