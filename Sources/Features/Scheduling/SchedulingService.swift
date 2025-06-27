@@ -1,31 +1,41 @@
 import Foundation
 import Utilities
+import ServiceManagement
+import OSLog
 
 struct SchedulingService: SchedulingServiceProtocol {
-    private let preferencesRepository: any PreferencesRepository
-    private let fileSystemProvider: any FileSystemProvider
+    private nonisolated(unsafe) let appServiceAgent = SMAppService.agent(
+        plistName: "io.github.matejkob.DarkModeSwitch.LaunchAgent.plist"
+    )
     
-    init(
-        preferencesRepository: any PreferencesRepository = UserDefaultsPreferencesRepository(),
-        fileSystemProvider: any FileSystemProvider = DefaultFileSystemProvider()
-    ) {
-        self.preferencesRepository = preferencesRepository
-        self.fileSystemProvider = fileSystemProvider
+    func enableAutomaticScheduling() throws {
+        do {
+            try appServiceAgent.register()
+        } catch {
+            throw SchedulingError.registrationFailed(error)
+        }
     }
     
-    func enableAutomaticScheduling(darkModeTime: Date, lightModeTime: Date) async throws {
-    
-    }
-    
-    func disableAutomaticScheduling() async throws {
-        
-    }
-    
-    func updateSchedule(darkModeTime: Date, lightModeTime: Date) async throws {
-        
+    func disableAutomaticScheduling() throws {
+        do {
+            try appServiceAgent.unregister()
+        } catch {
+            throw SchedulingError.unregistrationFailed(error)
+        }
     }
     
     func isSchedulingEnabled() -> Bool {
-        true
+        let status = appServiceAgent.status
+        
+        switch status {
+        case .enabled:
+            return true
+        case .notRegistered, .notFound:
+            return false
+        case .requiresApproval:
+            return false
+        @unknown default:
+            return false
+        }
     }
 }

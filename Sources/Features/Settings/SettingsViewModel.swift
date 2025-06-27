@@ -25,29 +25,21 @@ final class SettingsViewModel {
     }
     
     func save() async throws {
+        // Save settings to UserDefaults first
+        await saveSettings()
+        
         if automaticSwitchingEnabled {
-            if schedulingService.isSchedulingEnabled() {
-                // Update existing schedule
-                try await schedulingService.updateSchedule(
-                    darkModeTime: darkModeTime,
-                    lightModeTime: lightModeTime
-                )
-            } else {
-                // Enable new schedule
-                try await schedulingService.enableAutomaticScheduling(
-                    darkModeTime: darkModeTime,
-                    lightModeTime: lightModeTime
-                )
+            // Enable scheduling if not already enabled
+            if !schedulingService.isSchedulingEnabled() {
+                try schedulingService.enableAutomaticScheduling()
             }
+            // The launch agent will read the updated times from preferences
         } else {
             // Disable scheduling if it was enabled
             if schedulingService.isSchedulingEnabled() {
-                try await schedulingService.disableAutomaticScheduling()
+                try schedulingService.disableAutomaticScheduling()
             }
         }
-        
-        // Save to UserDefaults
-        await saveSettings()
     }
     
     func cancel() async {
