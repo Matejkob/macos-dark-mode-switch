@@ -11,6 +11,6 @@ final class SchedulingServiceSpy: SchedulingServiceProtocol, @unchecked Sendable
     }
     
     func isSchedulingEnabled() -> Bool {
-    
+        fatalError()
     }
 }
