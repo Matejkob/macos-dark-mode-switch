@@ -43,25 +43,14 @@ jobs:
       run: |
         xcodebuild -workspace DarkModeSwitch.xcworkspace \
           -scheme Tests \
-          -configuration Debug \
-          -testPlan UnitTests \
-          -derivedDataPath .build/DerivedData \
           -enableCodeCoverage YES \
-          -resultBundlePath UnitTestsResults.xcresult \
           CODE_SIGNING_ALLOWED=NO \
           test
 
-    - name: Generate Coverage Report
-      if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
-      run: |
-        xcrun xccov view --report --json UnitTestsResults.xcresult > coverage_report.json
-        cat coverage_report.json
-
     - name: Upload Coverage to Codecov
-      if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
-        file: coverage_report.json
+        slug: Matejkob/macos-dark-mode-switch
         token: ${{ secrets.CODECOV_TOKEN }}
     
   # lint:
