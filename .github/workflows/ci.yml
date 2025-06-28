@@ -51,25 +51,27 @@ jobs:
 
     - name: Gather code coverage
       run: |
-        # Find all test executables (main tests and package tests)
-        echo "=== Finding test executables ==="
+        # Find all test executables and binaries
+        echo "=== Finding all executables and frameworks ==="
         find .build -name "*.xctest" -type d | while read -r bundle; do
-          echo "Found bundle: $bundle"
+          echo "Found test bundle: $bundle"
         done
         
-        # Find the main Tests.xctest bundle (prioritize the one inside App.app)
-        TEST_BUNDLE_PATH=$(find .build -path "*App.app*" -name "Tests.xctest" -type d | head -n 1)
+        find .build -name "*.framework" -type d | while read -r framework; do
+          echo "Found framework: $framework"
+        done
         
-        if [ -z "$TEST_BUNDLE_PATH" ]; then
-          echo "Error: Could not find test bundle"
-          exit 1
+        # Find the App executable (which contains the actual code)
+        APP_EXECUTABLE=$(find .build -name "App.app" -type d | head -n 1)/Contents/MacOS/App
+        
+        if [ ! -f "$APP_EXECUTABLE" ]; then
+          echo "Warning: Could not find App executable"
+        else
+          echo "Found App executable: $APP_EXECUTABLE"
         fi
         
-        # Find all package test bundles
-        PACKAGE_TEST_BUNDLES=$(find .build/Build/Products/Debug -name "*PackageTests.xctest" -type d || true)
-        
-        # Get the executable name (macOS test bundles have the executable inside Contents/MacOS/)
-        TEST_EXECUTABLE="$TEST_BUNDLE_PATH/Contents/MacOS/Tests"
+        # Find all test bundles
+        TEST_BUNDLES=$(find .build -name "*.xctest" -type d)
         
         # Find the profdata file
         PROFDATA_PATH=$(find .build -name "*.profdata" | head -n 1)
@@ -80,28 +82,36 @@ jobs:
         fi
         
         echo "=== Coverage gathering configuration ==="
-        echo "Main test bundle: $TEST_BUNDLE_PATH"
-        echo "Main test executable: $TEST_EXECUTABLE"
         echo "Profile data: $PROFDATA_PATH"
-        echo "Package test bundles: $PACKAGE_TEST_BUNDLES"
         
         # Collect all executables for coverage
-        ALL_EXECUTABLES="$TEST_EXECUTABLE"
+        ALL_EXECUTABLES=""
         
-        # Add package test executables if they exist
-        if [ -n "$PACKAGE_TEST_BUNDLES" ]; then
-          for bundle in $PACKAGE_TEST_BUNDLES; do
-            executable_name=$(basename "$bundle" .xctest)
-            executable_path="$bundle/Contents/MacOS/$executable_name"
-            if [ -f "$executable_path" ]; then
-              ALL_EXECUTABLES="$ALL_EXECUTABLES -object $executable_path"
-              echo "Added package test executable: $executable_path"
-            fi
-          done
+        # Add the App executable if it exists
+        if [ -f "$APP_EXECUTABLE" ]; then
+          ALL_EXECUTABLES="$APP_EXECUTABLE"
+          echo "Using App executable: $APP_EXECUTABLE"
         fi
+        
+        # Add all test executables
+        for bundle in $TEST_BUNDLES; do
+          executable_name=$(basename "$bundle" .xctest)
+          executable_path="$bundle/Contents/MacOS/$executable_name"
+          
+          if [ -f "$executable_path" ]; then
+            if [ -z "$ALL_EXECUTABLES" ]; then
+              ALL_EXECUTABLES="$executable_path"
+            else
+              ALL_EXECUTABLES="$ALL_EXECUTABLES -object $executable_path"
+            fi
+            echo "Added test executable: $executable_path"
+          fi
+        done
         
         # Generate coverage report
         echo "=== Generating coverage report ==="
+        echo "Command: xcrun llvm-cov report $ALL_EXECUTABLES -instr-profile=\"$PROFDATA_PATH\""
+        
         xcrun llvm-cov report \
           $ALL_EXECUTABLES \
           -instr-profile="$PROFDATA_PATH" \
@@ -118,6 +128,12 @@ jobs:
         
         echo "=== Coverage report generated ==="
         echo "LCOV file size: $(wc -c < coverage_report.lcov) bytes"
+        
+        # Debug: Show first few lines of LCOV if not empty
+        if [ -s coverage_report.lcov ]; then
+          echo "First 10 lines of LCOV report:"
+          head -n 10 coverage_report.lcov
+        fi
 
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v5
