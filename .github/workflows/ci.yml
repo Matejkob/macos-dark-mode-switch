@@ -53,11 +53,12 @@ jobs:
     
     - name: Upload Coverage to Codecov
       if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
-        file: ./coverage.json
+        files: ./coverage.json
         flags: unittests
-        name: codecov-umbrella
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: Matejkob/macos-dark-mode-switch
         fail_ci_if_error: false
     
     - name: Upload Test Results
