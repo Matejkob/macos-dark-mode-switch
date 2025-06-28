@@ -51,31 +51,18 @@ jobs:
           CODE_SIGNING_ALLOWED=NO \
           test
 
-    - name: Install slather
-      if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
-      run: gem install slather
-    
-    - name: Convert xcresult to lcov
-      if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
-      run: |
-        # Convert xcresult to lcov format using slather
-        slather coverage \
-          -f lcov \
-          --scheme Tests \
-          --workspace DarkModeSwitch.xcworkspace \
-          --build-directory .build/DerivedData \
-          --output-directory . \
-          --ignore "*Tests*" \
-          --ignore "*.xctest*" \
-          DarkModeSwitch.xcodeproj
-    
     - name: Upload Coverage to Codecov
       if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
       uses: codecov/codecov-action@v5
       with:
-        files: ./coverage.lcov
+        xcode: true
+        xcode_archive_path: ./UnitTestsResults.xcresult
         token: ${{ secrets.CODECOV_TOKEN }}
         fail_ci_if_error: false
+        flags: unittests
+        # exclude: |
+        #   **/Tests/**
+        #   **/*.xctest/**
     
   # lint:
   #   name: Swift Lint
