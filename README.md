@@ -1,4 +1,4 @@
-# DarkModeSwitch
+# Dark Mode Switch
 
 A macOS menu bar application that improves control over dark mode switching with custom time scheduling.
 
