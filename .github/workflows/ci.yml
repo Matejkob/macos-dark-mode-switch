@@ -50,21 +50,19 @@ jobs:
           -resultBundlePath TestResults/AppTests.xcresult \
           CODE_SIGNING_ALLOWED=NO \
           test \
-          | xcpretty --report junit --output TestResults/junit.xml
+          | xcpretty
 
     - name: Generate Coverage Report
       if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
       run: |
         xcrun xccov view --report --json TestResults/AppTests.xcresult > coverage.json
-        xcrun xccov view --report TestResults/AppTests.xcresult > coverage.txt
     
     - name: Upload Coverage to Codecov
       if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
       uses: codecov/codecov-action@v5
       with:
-        files: TestResults/junit.xml
+        files: coverage.json
         token: ${{ secrets.CODECOV_TOKEN }}
-        slug: Matejkob/macos-dark-mode-switch
         fail_ci_if_error: false
     
   # lint:
