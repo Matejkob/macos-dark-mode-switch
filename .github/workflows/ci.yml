@@ -55,8 +55,7 @@ jobs:
       if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
       uses: codecov/codecov-action@v5
       with:
-        xcode: true
-        xcode_archive_path: ./UnitTestsResults.xcresult
+        files: ./UnitTestsResults.xcresult
         token: ${{ secrets.CODECOV_TOKEN }}
         fail_ci_if_error: false
         flags: unittests
