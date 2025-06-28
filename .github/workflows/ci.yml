@@ -26,6 +26,9 @@ jobs:
     - name: Show Xcode version
       run: xcodebuild -version
     
+    - name: Install xcpretty
+      run: gem install xcpretty
+    
     - name: Build App (Debug)
       run: |
         xcodebuild -project DarkModeSwitch.xcodeproj \
@@ -33,42 +36,37 @@ jobs:
           -configuration Debug \
           -derivedDataPath build \
           CODE_SIGNING_ALLOWED=NO \
-          build
+          build \
+          | xcpretty
     
     - name: Run Unit Tests
       run: |
+        mkdir -p TestResults
         xcodebuild -project DarkModeSwitch.xcodeproj \
           -scheme Tests \
           -testPlan UnitTests \
           -derivedDataPath build \
           -enableCodeCoverage YES \
           -resultBundlePath TestResults/AppTests.xcresult \
+          CODE_SIGNING_ALLOWED=NO \
           test \
-          CODE_SIGNING_ALLOWED=NO
+          | xcpretty --report junit --output TestResults/junit.xml
 
     - name: Generate Coverage Report
       if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
       run: |
         xcrun xccov view --report --json TestResults/AppTests.xcresult > coverage.json
+        xcrun xccov view --report TestResults/AppTests.xcresult > coverage.txt
     
     - name: Upload Coverage to Codecov
       if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
       uses: codecov/codecov-action@v5
       with:
-        files: ./coverage.json
-        flags: unittests
+        files: TestResults/junit.xml
         token: ${{ secrets.CODECOV_TOKEN }}
         slug: Matejkob/macos-dark-mode-switch
         fail_ci_if_error: false
     
-    - name: Upload Test Results
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-results-${{ matrix.os }}-xcode-${{ matrix.xcode }}
-        path: TestResults/
-        retention-days: 7
-
   # lint:
   #   name: Swift Lint
   #   runs-on: macos-latest
