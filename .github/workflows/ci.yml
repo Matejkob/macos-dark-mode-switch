@@ -51,14 +51,19 @@ jobs:
           CODE_SIGNING_ALLOWED=NO \
           test
 
+    - name: Generate Coverage Report
+      if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
+      run: |
+        xcrun xccov view --report --json UnitTestsResults.xcresult > coverage_report.json
+
     - name: Upload Coverage to Codecov
       if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
       uses: codecov/codecov-action@v5
       with:
-        files: ./UnitTestsResults.xcresult
+        files: coverage_report.json
         token: ${{ secrets.CODECOV_TOKEN }}
         fail_ci_if_error: false
-        flags: unittests
+        # flags: unittests
         # exclude: |
         #   **/Tests/**
         #   **/*.xctest/**
