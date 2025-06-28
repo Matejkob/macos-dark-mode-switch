@@ -55,6 +55,7 @@ jobs:
       if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
       run: |
         xcrun xccov view --report --json UnitTestsResults.xcresult > coverage_report.json
+        cat coverage_report.json
 
     - name: Upload Coverage to Codecov
       if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
