@@ -2,6 +2,8 @@
 
 A macOS menu bar application that improves control over dark mode switching with custom time scheduling.
 
+[![codecov](https://codecov.io/github/Matejkob/macos-dark-mode-switch/graph/badge.svg?token=384SIN89WR)](https://codecov.io/github/Matejkob/macos-dark-mode-switch)
+[![CI](https://github.com/Matejkob/macos-dark-mode-switch/actions/workflows/ci.yml/badge.svg)](https://github.com/Matejkob/macos-dark-mode-switch/actions/workflows/ci.yml)
 ![macOS](https://img.shields.io/badge/macOS-10.15+-blue.svg)
 ![Swift](https://img.shields.io/badge/Swift-6.1-orange.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
