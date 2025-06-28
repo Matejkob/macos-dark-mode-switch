@@ -115,7 +115,7 @@ jobs:
         xcrun llvm-cov report \
           $ALL_EXECUTABLES \
           -instr-profile="$PROFDATA_PATH" \
-          -ignore-filename-regex=".build|Tests|Packages/.*/Tests" \
+          -ignore-filename-regex=".build|Tests" \
           -use-color
         
         # Export to LCOV format
@@ -123,7 +123,7 @@ jobs:
         xcrun llvm-cov export -format="lcov" \
           $ALL_EXECUTABLES \
           -instr-profile="$PROFDATA_PATH" \
-          -ignore-filename-regex=".build|Tests|Packages/.*/Tests" \
+          -ignore-filename-regex=".build|Tests" \
           > coverage_report.lcov
         
         echo "=== Coverage report generated ==="
