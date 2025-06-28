@@ -43,6 +43,7 @@ jobs:
       run: |
         xcodebuild -workspace DarkModeSwitch.xcworkspace \
           -scheme Tests \
+          -testPlan UnitTests \
           -enableCodeCoverage YES \
           CODE_SIGNING_ALLOWED=NO \
           test
