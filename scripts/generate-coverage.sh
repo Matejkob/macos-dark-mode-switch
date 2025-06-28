@@ -120,53 +120,34 @@ echo ""
 echo "=== Generating detailed coverage output ==="
 echo "Command: xcrun llvm-cov report $ALL_EXECUTABLES -instr-profile=\"$PROFDATA_PATH\""
 
-# Use show command to see source file coverage
+# Generate detailed coverage output for debugging
 xcrun llvm-cov show \
     $ALL_EXECUTABLES \
     -instr-profile="$PROFDATA_PATH" \
     -format=text \
-    -output-dir="$COVERAGE_HTML_DIR" || echo "llvm-cov show failed"
+    -output-dir="$COVERAGE_HTML_DIR" >/dev/null 2>&1
 
-# List what files were found
+# Verify App target coverage is included
 if [ -d "$COVERAGE_HTML_DIR" ]; then
-    echo ""
-    echo "=== Coverage output files ==="
-    find "$COVERAGE_HTML_DIR" -name "*.txt" | head -20
-    
-    echo ""
-    echo "=== Looking for App source files in coverage ==="
-    find "$COVERAGE_HTML_DIR" -name "*.txt" | grep -E "(DarkMode|MenuBar|Settings|Features)" || echo "No App source files found in coverage"
-    
-    echo ""
-    echo "=== All source files (non-test) in coverage ==="
-    find "$COVERAGE_HTML_DIR" -name "*.txt" | grep -v Tests | grep Sources || echo "No source files found"
+    APP_SOURCE_COUNT=$(find "$COVERAGE_HTML_DIR" -name "*.txt" | grep -c "Sources/Features" || echo "0")
+    if [ "$APP_SOURCE_COUNT" -gt 0 ]; then
+        echo "✅ App target coverage verified: $APP_SOURCE_COUNT source files found"
+    else
+        echo "⚠️  Warning: No App target source files found in coverage"
+    fi
 fi
 
-# Generate coverage report WITHOUT filtering first to see what's actually there
+# Generate summary coverage report
 echo ""
-echo "=== RAW coverage report (no filtering) ==="
-xcrun llvm-cov report \
-    $ALL_EXECUTABLES \
-    -instr-profile="$PROFDATA_PATH" \
-    -use-color
-
-echo ""
-echo "=== Looking for App target source files specifically ==="
-xcrun llvm-cov export -format="lcov" \
-    $ALL_EXECUTABLES \
-    -instr-profile="$PROFDATA_PATH" \
-    | grep "^SF:" | grep -v Tests | grep -v Packages || echo "No App target files found in raw coverage"
-
-# Generate coverage report with filtering
-echo ""
-echo "=== Filtered coverage report ==="
+echo "=== Coverage Summary ==="
 xcrun llvm-cov report \
     $ALL_EXECUTABLES \
     -instr-profile="$PROFDATA_PATH" \
     -ignore-filename-regex="Tests|\.build" \
     -use-color
 
-# Export to LCOV format with filters to exclude test files
+
+# Export to LCOV format (excluding tests and build artifacts)
 echo ""
 echo "=== Exporting to LCOV format ==="
 xcrun llvm-cov export -format="lcov" \
@@ -175,21 +156,19 @@ xcrun llvm-cov export -format="lcov" \
     -ignore-filename-regex="Tests|\.build" \
     > "$COVERAGE_OUTPUT"
 
-echo ""
-echo "=== Coverage report generated ==="
-echo "LCOV file: $COVERAGE_OUTPUT"
-echo "LCOV file size: $(wc -c < "$COVERAGE_OUTPUT") bytes"
-
-# Debug: Show first few lines of LCOV if not empty
+# Verify LCOV file was generated successfully
 if [ -s "$COVERAGE_OUTPUT" ]; then
-    echo ""
-    echo "First 10 lines of LCOV report:"
-    head -n 10 "$COVERAGE_OUTPUT"
+    LCOV_SIZE=$(wc -c < "$COVERAGE_OUTPUT")
+    echo "✅ LCOV report generated successfully: $LCOV_SIZE bytes"
+else
+    echo "❌ Error: LCOV file is empty or not generated"
+    exit 1
 fi
 
 echo ""
 echo "✅ Coverage generation complete!"
-echo "📊 LCOV report: $COVERAGE_OUTPUT"
+echo "📊 LCOV file: $COVERAGE_OUTPUT"
 if [ -d "$COVERAGE_HTML_DIR" ]; then
-    echo "📁 Detailed coverage: $COVERAGE_HTML_DIR/"
+    echo "📁 Detailed output: $COVERAGE_HTML_DIR/"
 fi
+echo "🎯 Ready for Codecov upload"

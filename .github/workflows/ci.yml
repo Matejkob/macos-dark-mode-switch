@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-test:
-    name: Build and Test
+  build:
+    name: Build
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -26,20 +26,38 @@ jobs:
     - name: Show Xcode version
       run: xcodebuild -version
     
-    # - name: Install xcpretty
-    #   run: gem install xcpretty
+    - name: Install xcpretty
+      run: gem install xcpretty
     
-    # - name: Build App (Debug)
-    #   run: |
-    #     xcodebuild -project DarkModeSwitch.xcodeproj \
-    #       -scheme App \
-    #       -configuration Debug \
-    #       -derivedDataPath .build \
-    #       CODE_SIGNING_ALLOWED=NO \
-    #       build \
-    #       | xcpretty
+    - name: Build App (Debug)
+      run: |
+        xcodebuild -project DarkModeSwitch.xcodeproj \
+          -scheme App \
+          -configuration Debug \
+          -derivedDataPath .build \
+          CODE_SIGNING_ALLOWED=NO \
+          build \
+          | xcpretty
+
+  test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-15]
+        xcode: ['16.4']
     
-    - name: Build and Test with Coverage
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Select Xcode version
+      run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
+    
+    - name: Show Xcode version
+      run: xcodebuild -version
+
+    - name: Test with Coverage
       run: |
         xcodebuild -workspace DarkModeSwitch.xcworkspace \
           -scheme Tests \
@@ -59,40 +77,4 @@ jobs:
         slug: Matejkob/macos-dark-mode-switch
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage_report.lcov
-        fail_ci_if_error: true
-        verbose: true
-    
-  # lint:
-  #   name: Swift Lint
-  #   runs-on: macos-latest
-    
-  #   steps:
-  #   - name: Checkout code
-  #     uses: actions/checkout@v4
-    
-  #   - name: Install SwiftLint
-  #     run: brew install swiftlint
-    
-  #   - name: Run SwiftLint
-  #     run: swiftlint lint --reporter github-actions-logging
-
-  # check-format:
-  #   name: Check Swift Format
-  #   runs-on: macos-latest
-    
-  #   steps:
-  #   - name: Checkout code
-  #     uses: actions/checkout@v4
-    
-  #   - name: Install swift-format
-  #     run: brew install swift-format
-    
-  #   - name: Check formatting
-  #     run: |
-  #       swift-format lint --recursive \
-  #         --parallel \
-  #         --strict \
-  #         App/ \
-  #         LaunchAgent/ \
-  #         Tests/ \
-  #         Packages/
+        fail_ci_if_error: false
