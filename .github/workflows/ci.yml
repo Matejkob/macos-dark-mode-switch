@@ -45,9 +45,7 @@ jobs:
           -scheme Tests \
           -configuration Debug \
           -testPlan UnitTests \
-          # -derivedDataPath .build/DerivedData \
           -enableCodeCoverage YES \
-          # -resultBundlePath UnitTestsResults.xcresult \
           CODE_SIGNING_ALLOWED=NO \
           test
 
