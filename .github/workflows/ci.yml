@@ -133,18 +133,26 @@ jobs:
         if [ -d "coverage_output" ]; then
           echo "=== Coverage output files ==="
           find coverage_output -name "*.txt" | head -20
+          
+          echo "=== Looking for App source files in coverage ==="
+          find coverage_output -name "*.txt" | grep -E "(DarkMode|MenuBar|Settings|Features)" || echo "No App source files found in coverage"
+          
+          echo "=== All source files (non-test) in coverage ==="
+          find coverage_output -name "*.txt" | grep -v Tests | grep Sources || echo "No source files found"
         fi
         
         xcrun llvm-cov report \
           $ALL_EXECUTABLES \
           -instr-profile="$PROFDATA_PATH" \
+          -ignore-filename-regex="Tests|\.build" \
           -use-color
         
-        # Export to LCOV format with more inclusive filters
+        # Export to LCOV format with filters to exclude test files
         echo "=== Exporting to LCOV format ==="
         xcrun llvm-cov export -format="lcov" \
           $ALL_EXECUTABLES \
           -instr-profile="$PROFDATA_PATH" \
+          -ignore-filename-regex="Tests|\.build" \
           > coverage_report.lcov
         
         echo "=== Coverage report generated ==="
