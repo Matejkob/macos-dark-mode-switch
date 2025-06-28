@@ -44,15 +44,58 @@ jobs:
         xcodebuild -workspace DarkModeSwitch.xcworkspace \
           -scheme Tests \
           -testPlan UnitTests \
+          -derivedDataPath .build \
           -enableCodeCoverage YES \
           CODE_SIGNING_ALLOWED=NO \
           test
+
+    - name: Gather code coverage
+      run: |
+        # Find the test bundle executable
+        TEST_BUNDLE_PATH=$(find .build -name "Tests.xctest" -type d | head -n 1)
+        
+        if [ -z "$TEST_BUNDLE_PATH" ]; then
+          echo "Error: Could not find test bundle"
+          exit 1
+        fi
+        
+        # Get the executable name (macOS test bundles have the executable inside Contents/MacOS/)
+        TEST_EXECUTABLE="$TEST_BUNDLE_PATH/Contents/MacOS/Tests"
+        
+        # Find the profdata file
+        PROFDATA_PATH=$(find .build -name "default.profdata" -o -name "Coverage.profdata" | head -n 1)
+        
+        if [ -z "$PROFDATA_PATH" ]; then
+          echo "Error: Could not find profdata file"
+          exit 1
+        fi
+        
+        echo "Test bundle: $TEST_BUNDLE_PATH"
+        echo "Test executable: $TEST_EXECUTABLE"
+        echo "Profile data: $PROFDATA_PATH"
+        
+        # Generate coverage report
+        xcrun llvm-cov report \
+          "$TEST_EXECUTABLE" \
+          -instr-profile="$PROFDATA_PATH" \
+          -ignore-filename-regex=".build|Tests|Packages/.*/Tests" \
+          -use-color
+        
+        # Export to LCOV format
+        xcrun llvm-cov export -format="lcov" \
+          "$TEST_EXECUTABLE" \
+          -instr-profile="$PROFDATA_PATH" \
+          -ignore-filename-regex=".build|Tests|Packages/.*/Tests" \
+          > coverage_report.lcov
 
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v5
       with:
         slug: Matejkob/macos-dark-mode-switch
         token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage_report.lcov
+        fail_ci_if_error: true
+        verbose: true
     
   # lint:
   #   name: Swift Lint
