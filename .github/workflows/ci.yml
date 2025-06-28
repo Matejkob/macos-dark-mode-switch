@@ -38,7 +38,7 @@ jobs:
     - name: Run Unit Tests
       run: |
         xcodebuild -project DarkModeSwitch.xcodeproj \
-          # -scheme Tests \
+          -scheme Tests \
           -testPlan UnitTests \
           -derivedDataPath build \
           -enableCodeCoverage YES \
