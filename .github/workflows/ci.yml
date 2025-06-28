@@ -57,8 +57,8 @@ jobs:
           echo "Found bundle: $bundle"
         done
         
-        # Find the main Tests.xctest bundle (not inside App.app)
-        TEST_BUNDLE_PATH=$(find .build/Build/Products -name "Tests.xctest" -type d | grep -v ".app" | head -n 1)
+        # Find the main Tests.xctest bundle (prioritize the one inside App.app)
+        TEST_BUNDLE_PATH=$(find .build -path "*App.app*" -name "Tests.xctest" -type d | head -n 1)
         
         if [ -z "$TEST_BUNDLE_PATH" ]; then
           echo "Error: Could not find test bundle"
@@ -66,7 +66,7 @@ jobs:
         fi
         
         # Find all package test bundles
-        PACKAGE_TEST_BUNDLES=$(find .build/Build/Products -name "*PackageTests.xctest" -type d | grep -v ".app" || true)
+        PACKAGE_TEST_BUNDLES=$(find .build/Build/Products/Debug -name "*PackageTests.xctest" -type d || true)
         
         # Get the executable name (macOS test bundles have the executable inside Contents/MacOS/)
         TEST_EXECUTABLE="$TEST_BUNDLE_PATH/Contents/MacOS/Tests"
