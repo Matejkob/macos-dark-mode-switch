@@ -15,7 +15,7 @@ final class DarkModeServiceSpy: DarkModeServiceProtocol, @unchecked Sendable {
     // MARK: - toggleMode
     
     var toggleModeCalledCount = 0
-    var toggleModeShouldThrow: Error?
+    var toggleModeShouldThrow: (any Error)?
 
     func toggleMode() async throws {
         toggleModeCalledCount += 1

@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		453477522E0AC32F00401C3C /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = 453477512E0AC32F00401C3C /* Utilities */; };
-		457CD7D62E0ECF5B00FDBCA0 /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = 45EE1B2D2E0DEF380085A617 /* Utilities */; };
+		45150B1E2E1067D400B0B977 /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = 45150B1D2E1067D400B0B977 /* Utilities */; };
 		45EE1B372E0DF0810085A617 /* LaunchAgent in Resources */ = {isa = PBXBuildFile; fileRef = 45EE1B262E0DEF2C0085A617 /* LaunchAgent */; };
 		45F7F7A82E0E9F7E0085CCD0 /* AppearanceSwitcher in Frameworks */ = {isa = PBXBuildFile; productRef = 45F7F7A72E0E9F7E0085CCD0 /* AppearanceSwitcher */; };
 /* End PBXBuildFile section */
@@ -104,7 +103,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				453477522E0AC32F00401C3C /* Utilities in Frameworks */,
+				45150B1E2E1067D400B0B977 /* Utilities in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,7 +118,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				457CD7D62E0ECF5B00FDBCA0 /* Utilities in Frameworks */,
 				45F7F7A82E0E9F7E0085CCD0 /* AppearanceSwitcher in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -181,7 +179,7 @@
 			);
 			name = App;
 			packageProductDependencies = (
-				453477512E0AC32F00401C3C /* Utilities */,
+				45150B1D2E1067D400B0B977 /* Utilities */,
 			);
 			productName = DarkModeSwitch;
 			productReference = 4578DE832E05783800C35580 /* App.app */;
@@ -227,7 +225,6 @@
 			);
 			name = LaunchAgent;
 			packageProductDependencies = (
-				45EE1B2D2E0DEF380085A617 /* Utilities */,
 				45F7F7A72E0E9F7E0085CCD0 /* AppearanceSwitcher */,
 			);
 			productName = LaunchAgent;
@@ -265,6 +262,9 @@
 			);
 			mainGroup = 4578DE7A2E05783800C35580;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				45150B1C2E1067D400B0B977 /* XCLocalSwiftPackageReference "Packages/Utilities" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4578DE842E05783800C35580 /* Products */;
 			projectDirPath = "";
@@ -620,12 +620,15 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCSwiftPackageProductDependency section */
-		453477512E0AC32F00401C3C /* Utilities */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Utilities;
+/* Begin XCLocalSwiftPackageReference section */
+		45150B1C2E1067D400B0B977 /* XCLocalSwiftPackageReference "Packages/Utilities" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/Utilities;
 		};
-		45EE1B2D2E0DEF380085A617 /* Utilities */ = {
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		45150B1D2E1067D400B0B977 /* Utilities */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Utilities;
 		};
