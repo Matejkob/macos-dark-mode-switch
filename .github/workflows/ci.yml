@@ -60,11 +60,11 @@ jobs:
       run: |
         # Convert xcresult to lcov format using slather
         slather coverage \
+          -f lcov \
           --scheme Tests \
           --workspace DarkModeSwitch.xcworkspace \
-          --binary-basename DarkModeSwitch \
+          --build-directory .build/DerivedData \
           --output-directory . \
-          --lcov \
           --ignore "*Tests*" \
           --ignore "*.xctest*" \
           DarkModeSwitch.xcodeproj
