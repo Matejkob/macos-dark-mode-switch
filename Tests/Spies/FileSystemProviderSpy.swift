@@ -36,7 +36,7 @@ final class FileSystemProviderSpy: FileSystemProvider, @unchecked Sendable {
     
     var createDirectoryCalledCount = 0
     var createDirectoryReceivedArguments: [(url: URL, withIntermediateDirectories: Bool)] = []
-    var createDirectoryShouldThrow: Error?
+    var createDirectoryShouldThrow: (any Error)?
 
     func createDirectory(at url: URL, withIntermediateDirectories: Bool) throws {
         createDirectoryCalledCount += 1
@@ -50,7 +50,7 @@ final class FileSystemProviderSpy: FileSystemProvider, @unchecked Sendable {
     
     var writeDataCalledCount = 0
     var writeDataReceivedArguments: [(data: Data, url: URL, options: Data.WritingOptions)] = []
-    var writeDataShouldThrow: Error?
+    var writeDataShouldThrow: (any Error)?
 
     func writeData(_ data: Data, to url: URL, options: Data.WritingOptions) throws {
         writeDataCalledCount += 1
@@ -64,7 +64,7 @@ final class FileSystemProviderSpy: FileSystemProvider, @unchecked Sendable {
     
     var setAttributesCalledCount = 0
     var setAttributesReceivedArguments: [(attributes: [FileAttributeKey: Any], path: String)] = []
-    var setAttributesShouldThrow: Error?
+    var setAttributesShouldThrow: (any Error)?
 
     func setAttributes(_ attributes: [FileAttributeKey: Any], ofItemAtPath path: String) throws {
         setAttributesCalledCount += 1
@@ -78,7 +78,7 @@ final class FileSystemProviderSpy: FileSystemProvider, @unchecked Sendable {
     
     var removeItemCalledCount = 0
     var removeItemReceivedArguments: [URL] = []
-    var removeItemShouldThrow: Error?
+    var removeItemShouldThrow: (any Error)?
 
     func removeItem(at url: URL) throws {
         removeItemCalledCount += 1

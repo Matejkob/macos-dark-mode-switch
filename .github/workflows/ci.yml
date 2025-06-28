@@ -34,31 +34,27 @@ jobs:
         xcodebuild -project DarkModeSwitch.xcodeproj \
           -scheme App \
           -configuration Debug \
-          -derivedDataPath build \
+          -derivedDataPath .build \
           CODE_SIGNING_ALLOWED=NO \
           build \
           | xcpretty
     
     - name: Run Unit Tests
       run: |
-        mkdir -p TestResults
-        xcodebuild -project DarkModeSwitch.xcodeproj \
+        xcodebuild -workspace DarkModeSwitch.xcworkspace \
           -scheme Tests \
+          -configuration Debug \
           -testPlan UnitTests \
-          -derivedDataPath build \
+          -derivedDataPath .build/DerivedData \
           -enableCodeCoverage YES \
-          -resultBundlePath TestResults/AppTests.xcresult \
+          -resultBundlePath UnitTestsResults.xcresult \
           CODE_SIGNING_ALLOWED=NO \
-          test \
-          | xcpretty --report junit
-    
-    - name: Test files
-      run: cat build/reports/junit.xml
+          test
     - name: Upload Coverage to Codecov
       if: matrix.os == 'macos-15' && matrix.xcode == '16.4'
       uses: codecov/codecov-action@v5
       with:
-        files: build/reports/junit.xml
+        files: # TODO: Add file path
         token: ${{ secrets.CODECOV_TOKEN }}
         fail_ci_if_error: false
     

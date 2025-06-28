@@ -5,7 +5,7 @@ final class SchedulingServiceSpy: SchedulingServiceProtocol, @unchecked Sendable
     // MARK: - enableAutomaticScheduling
     
     var enableAutomaticSchedulingCalledCount = 0
-    var enableAutomaticSchedulingShouldThrow: Error?
+    var enableAutomaticSchedulingShouldThrow: (any Error)?
     
     func enableAutomaticScheduling() throws {
         enableAutomaticSchedulingCalledCount += 1
@@ -17,7 +17,7 @@ final class SchedulingServiceSpy: SchedulingServiceProtocol, @unchecked Sendable
     // MARK: - disableAutomaticScheduling
     
     var disableAutomaticSchedulingCalledCount = 0
-    var disableAutomaticSchedulingShouldThrow: Error?
+    var disableAutomaticSchedulingShouldThrow: (any Error)?
     
     func disableAutomaticScheduling() throws {
         disableAutomaticSchedulingCalledCount += 1

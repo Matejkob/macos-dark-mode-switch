@@ -89,8 +89,8 @@ struct ProcessRunnerErrorTests {
     
     @Test("Error conforms to Error protocol")
     func errorConformsToErrorProtocol() {
-        let error1: Error = ProcessRunnerError.failure(code: 1, reason: "test")
-        let error2: Error = ProcessRunnerError.executionFailed(NSError(domain: "test", code: 1))
+        let error1: any Error = ProcessRunnerError.failure(code: 1, reason: "test")
+        let error2: any Error = ProcessRunnerError.executionFailed(NSError(domain: "test", code: 1))
         
         #expect(error1 is ProcessRunnerError)
         #expect(error2 is ProcessRunnerError)

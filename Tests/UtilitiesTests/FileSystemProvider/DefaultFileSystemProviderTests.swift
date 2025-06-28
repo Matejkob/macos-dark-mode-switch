@@ -166,7 +166,7 @@ struct DefaultFileSystemProviderTests {
         
         let nonExistentURL = testDirectory.appendingPathComponent("does-not-exist.txt")
         
-        #expect(throws: Error.self) {
+        #expect(throws: (any Error).self) {
             try sut.removeItem(at: nonExistentURL)
         }
     }
