@@ -108,22 +108,43 @@ jobs:
           fi
         done
         
-        # Generate coverage report
-        echo "=== Generating coverage report ==="
+        # Debug: Check what's actually in the App executable
+        echo "=== Debugging App executable symbols ==="
+        nm "$APP_EXECUTABLE" | grep -E "(_main|DarkMode|MenuBar|Settings)" | head -10 || echo "No matching symbols found"
+        
+        # Try different approaches to get coverage
+        echo "=== Generating coverage report (App executable only) ==="
+        xcrun llvm-cov report \
+          "$APP_EXECUTABLE" \
+          -instr-profile="$PROFDATA_PATH" \
+          -use-color || echo "App-only coverage failed"
+          
+        echo "=== Generating coverage report (with all sources) ==="
         echo "Command: xcrun llvm-cov report $ALL_EXECUTABLES -instr-profile=\"$PROFDATA_PATH\""
+        
+        # Use show command to see source file coverage
+        xcrun llvm-cov show \
+          $ALL_EXECUTABLES \
+          -instr-profile="$PROFDATA_PATH" \
+          -format=text \
+          -output-dir=coverage_output || echo "llvm-cov show failed"
+        
+        # List what files were found
+        if [ -d "coverage_output" ]; then
+          echo "=== Coverage output files ==="
+          find coverage_output -name "*.txt" | head -20
+        fi
         
         xcrun llvm-cov report \
           $ALL_EXECUTABLES \
           -instr-profile="$PROFDATA_PATH" \
-          -ignore-filename-regex=".build|Tests" \
           -use-color
         
-        # Export to LCOV format
+        # Export to LCOV format with more inclusive filters
         echo "=== Exporting to LCOV format ==="
         xcrun llvm-cov export -format="lcov" \
           $ALL_EXECUTABLES \
           -instr-profile="$PROFDATA_PATH" \
-          -ignore-filename-regex=".build|Tests" \
           > coverage_report.lcov
         
         echo "=== Coverage report generated ==="
